@@ -1,4 +1,4 @@
-const apiKey = 'f06c9609cedcece4b1bb4450304d109a'; // Your API key
+const apiKey = '88b63f0cfc452a647cc394d7e3a52214'; // Your API key
 const baseUrl = 'https://api.themoviedb.org/3';
 const movieGrid = document.getElementById('movie-grid');
 const contentTypeSelect = document.getElementById('contentType');
