@@ -95,7 +95,7 @@ const fetchMovies = async (category, rowId) => {
 
                 // Add click event to each movie poster to redirect to the movie details page
                 movieCard.addEventListener('click', () => {
-                    window.location.href = `movie-details.html?movie_id=${movie.id}`;
+                    window.location.href = `movie.html?movie_id=${movie.id}`;
                 });
 
                 movieCards.appendChild(movieCard);
