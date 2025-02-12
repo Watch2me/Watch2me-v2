@@ -191,7 +191,7 @@ const fetchBanner = async () => {
 
         // Add event listener to the Play button to navigate to movie details
         playButton.addEventListener('click', () => {
-            window.location.href = `movie-details.html?movie_id=${movie.id}`;
+            window.location.href = `movies.html?movie_id=${movie.id}`;
         });
 
     } catch (error) {
