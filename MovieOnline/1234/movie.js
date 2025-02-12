@@ -95,7 +95,7 @@ const fetchMovies = async (category, rowId) => {
 
                 // Add click event to each movie poster to redirect to the movie details page
                 movieCard.addEventListener('click', () => {
-                    window.location.href = `movies-details.html?movie_id=${movie.id}`;
+                    window.location.href = `movie-details?movie_id=${movie.id}`;
                 });
 
                 movieCards.appendChild(movieCard);
@@ -145,7 +145,7 @@ moviePoster.alt = movie.title;
 
         // Add click event to each movie poster to redirect to the movie details page
         movieCard.addEventListener('click', () => {
-            window.location.href = `movies-details.html?movie_id=${movie.id}`;
+            window.location.href = `movie-details?movie_id=${movie.id}`;
         });
     });
 });
@@ -191,7 +191,7 @@ const fetchBanner = async () => {
 
         // Add event listener to the Play button to navigate to movie details
         playButton.addEventListener('click', () => {
-            window.location.href = `movies-details.html?movie_id=${movie.id}`;
+            window.location.href = `movie-details?movie_id=${movie.id}`;
         });
 
     } catch (error) {
@@ -353,7 +353,7 @@ const fetchMovieDetails = async () => {
             iframe.src = `${MOVIE_ENDPOINTS[currentServerIndex].url}${movieId}?primaryColor=ffffff&secondaryColor=a2a2a2&iconColor=eefdec&icons=default&player=jw&title=true&poster=true&autoplay=true`; // Use selected server URL
         
             // Hide the Watch Now button
-            watchNowBtn.style.display = 'none'; // Hide the Watch Now button
+            watchNowBtn.style.display = ''; // Hide the Watch Now button
         });
 
         // Fetch More Like This Movies
@@ -394,7 +394,7 @@ const fetchMovieDetails = async () => {
         closeBtn.addEventListener('click', () => {
             // Hide iframe container
             const iframeContainer = document.getElementById('iframe-container');
-            iframeContainer.style.display = 'none';
+            iframeContainer.style.display = '';
         
             // Remove the iframe content by clearing the innerHTML
             iframeContainer.innerHTML = '';
