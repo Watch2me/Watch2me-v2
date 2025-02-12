@@ -11,5 +11,203 @@
     <p id="movie-description"></p>
     <!-- Add other elements to display movie details, like rating, director, etc. -->
     <script src="1234/movie.js"></script>
+    // Fetch movie details based on the movieId
+const fetchMovieDetails = async () => {
+    try {
+        // Fetch the movie details using the movie ID
+        const url = `${baseUrl}/movie/${movieId}?api_key=${apiKey}&language=en-US`;
+        const response = await fetch(url);
+        const movie = await response.json();
+
+        // Movie Poster
+        const posterUrl = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+        document.getElementById('movie-poster').src = posterUrl;
+
+        // Movie Background
+        const backdropUrl = movie.backdrop_path ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}` : 'https://via.placeholder.com/1500x800?text=No+Backdrop+Available';
+        document.querySelector('.blurred-background').style.backgroundImage = `url(${backdropUrl})`;
+
+        // Movie Description
+        document.getElementById('movie-description').textContent = movie.overview;
+
+        // Movie Rating (star rating)
+        const movieRating = movie.vote_average; // Rating from 1 to 10
+        const starContainer = document.getElementById('movie-rating');
+        starContainer.innerHTML = ''; // Clear existing stars
+
+        const filledStars = Math.round(movieRating / 2); // Convert 10-point rating to 5-point scale
+        const emptyStars = 5 - filledStars;
+
+        // Add filled stars
+        for (let i = 0; i < filledStars; i++) {
+            const star = document.createElement('span');
+            star.classList.add('star', 'filled');
+            starContainer.appendChild(star);
+        }
+
+        // Add empty stars
+        for (let i = 0; i < emptyStars; i++) {
+            const star = document.createElement('span');
+            star.classList.add('star', 'empty');
+            starContainer.appendChild(star);
+        }
+
+        // Movie Release Date
+        document.getElementById('release-date-text').textContent = `: ${movie.release_date}`;
+
+        // Movie Genres
+        const genreContainer = document.getElementById('movie-genres');
+        genreContainer.innerHTML = ''; // Clear existing genres
+        movie.genres.forEach(genre => {
+            const genreElement = document.createElement('span');
+            genreElement.classList.add('genre');
+            genreElement.textContent = genre.name;
+            genreContainer.appendChild(genreElement);
+        });
+
+        const watchNowBtn = document.getElementById('watch-now-btn');
+        watchNowBtn.addEventListener('click', () => {
+            // Fetch the current movie history
+
+            // Now load the movie iframe for watching
+            const iframeContainer = document.getElementById('iframe-container');
+            iframeContainer.style.display = 'flex'; // Show iframe container
+        
+            // Inject iframe inside iframe container
+            const iframe = document.getElementById('movie-iframe');
+            iframe.src = `${MOVIE_ENDPOINTS[currentServerIndex].url}${movieId}?primaryColor=ffffff&secondaryColor=a2a2a2&iconColor=eefdec&icons=default&player=jw&title=true&poster=true&autoplay=true`; // Use selected server URL
+        
+            // Hide the Watch Now button
+            watchNowBtn.style.display = 'none'; // Hide the Watch Now button
+        });
+
+        // Fetch More Like This Movies
+        fetchMoreLikeThis(movieId);
+
+        // Add functionality for Change Server Button
+        const changeServerBtn = document.getElementById('change-server-btn');
+        const serverDropdown = document.getElementById('server-dropdown');
+        const serverList = document.getElementById('server-list');
+
+        // Populate the server list with custom names
+        MOVIE_ENDPOINTS.forEach((endpoint, index) => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${endpoint.name}`; // Use custom server name
+            listItem.addEventListener('click', () => changeServer(index));
+            serverList.appendChild(listItem);
+        });
+
+        // Show dropdown when Change Server button is clicked
+        changeServerBtn.addEventListener('click', () => {
+            serverDropdown.style.display = serverDropdown.style.display === 'none' ? 'block' : 'none';
+        });
+
+        // Function to change the server
+        function changeServer(index) {
+            currentServerIndex = index;
+            const iframe = document.getElementById('movie-iframe');
+            iframe.src = `${MOVIE_ENDPOINTS[currentServerIndex].url}${movieId}`; // Update iframe source
+
+            // Hide the dropdown
+            serverDropdown.style.display = 'none';
+
+            // Log the server change (optional)
+            console.log(`Changed to server: ${MOVIE_ENDPOINTS[currentServerIndex].name}`);
+        }
+
+        const closeBtn = document.getElementById('close-iframe-btn');
+        closeBtn.addEventListener('click', () => {
+            // Hide iframe container
+            const iframeContainer = document.getElementById('iframe-container');
+            iframeContainer.style.display = 'none';
+        
+            // Remove the iframe content by clearing the innerHTML
+            iframeContainer.innerHTML = '';
+        
+            // Show the Watch Now button again
+            watchNowBtn.style.display = 'block'; // Show the Watch Now button
+        
+            // Refresh the page
+            window.location.reload();  // This will reload the page
+        });
+        
+    } catch (error) {
+        console.error('Error fetching movie details:', error);
+    }
+};
+
+// Fetch More Like This Movies
+const fetchMoreLikeThis = async (movieId) => {
+    try {
+        const url = `${baseUrl}/movie/${movieId}/similar?api_key=${apiKey}&language=en-US`;
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        const similarMoviesContainer = document.getElementById('similar-movies-container');
+        similarMoviesContainer.innerHTML = ''; // Clear previous similar movies
+
+        // Loop through the results and create movie grid items
+        data.results.forEach(movie => {
+            const movieItem = document.createElement('div');
+            movieItem.classList.add('similar-movie'); // Add the grid item class
+
+            // Movie Poster Image
+            const movieImageUrl = movie.poster_path ? `https://image.tmdb.org/t/p/original${movie.poster_path}` : 'https://via.placeholder.com/500x750?text=No+Image';
+            const movieImage = document.createElement('img');
+            movieImage.src = movieImageUrl;
+            movieImage.alt = movie.title;
+            movieImage.classList.add('similar-movie-img'); // Add the image class
+
+            // Movie Title
+            const movieTitle = document.createElement('span');
+            movieTitle.textContent = movie.title;
+            movieTitle.classList.add('movie-title'); // Optional class for styling titles
+
+            movieItem.appendChild(movieImage); // Append the image
+
+            // Add click event to redirect to the selected movie page
+            movieItem.addEventListener('click', () => {
+                window.location.href = `?movie_id=${movie.id}`; // Redirect to the selected movie
+            });
+
+            similarMoviesContainer.appendChild(movieItem); // Append to the container
+        });
+    } catch (error) {
+        console.error('Error fetching similar movies:', error);
+    }
+};
+
+// Fetch and display movie details on page load
+fetchMovieDetails();
+
+// Fetch data for different categories
+fetchMovies('popular', 'netflixOriginals');
+fetchMovies('trending', 'trendingNow');
+fetchMovies('top_rated', 'topRated');
+fetchMovies('action', 'actionMovies');
+fetchMovies('comedy', 'comedyMovies');
+fetchMovies('horror', 'horrorMovies');
+fetchMovies('romance', 'romanceMovies');
+fetchMovies('documentary', 'documentaries');
+
+// Fetch banner details
+fetchBanner();
+
+// Initialize arrow buttons functionality after fetching the movie data
+document.addEventListener('DOMContentLoaded', initArrowNavigation);
+
+// JavaScript for the Close Button
+document.getElementById('close-button').addEventListener('click', () => {
+    window.location.href = 'movies.html';  // Redirects to the main page (index.html)
+});
+
+window.addEventListener("load", function() {
+    setTimeout(function() {
+        document.getElementById("loading-screen").style.display = "none";
+    }, 1000); // 3000ms = 3 seconds
+});
 </body>
 </html>
