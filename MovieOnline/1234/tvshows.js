@@ -1,4 +1,4 @@
-const apiKey = 'f06c9609cedcece4b1bb4450304d109a'; // Your TMDB API Key
+const apiKey = '88b63f0cfc452a647cc394d7e3a52214'; // Your TMDB API Key
 const baseUrl = 'https://api.themoviedb.org/3';
 
 // Function to fetch TV shows based on category
