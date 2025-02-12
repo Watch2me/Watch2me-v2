@@ -145,7 +145,7 @@ moviePoster.alt = movie.title;
 
         // Add click event to each movie poster to redirect to the movie details page
         movieCard.addEventListener('click', () => {
-            window.location.href = `movie-details.html?movie_id=${movie.id}`;
+            window.location.href = `movies.html?movie_id=${movie.id}`;
         });
     });
 });
