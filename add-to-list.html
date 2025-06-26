@@ -46,14 +46,24 @@
 
     <script src="1234/movie.js"></script> <!-- Your external JS file -->
 
-          <script
-  disable-copy='true'
-  disable-cut='true'
-  disable-paste='true'
-  clear-log='true'
-  disable-devtool-auto
-  disable-menu='false'
-  src='https://cdn.jsdelivr.net/npm/disable-devtool'
-></script>
+          <script src="https://cdn.jsdelivr.net/npm/disable-devtool"></script>
+    <script>
+        DisableDevtool({
+            // The parameters are the same as in 3.1
+        })
+    </script>
+
+    <script src="1234/protection.js"></script>
+
+    <script>
+        var message="Not Allowed... THANK YOU!!!";
+        var shouldAlert=1;
+        document.oncontextmenu=function(){
+            if(shouldAlert==1){
+                alert(message);
+            }
+            return false;
+        };
+    </script>
 </body>
 </html>
