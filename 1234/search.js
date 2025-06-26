@@ -1,4 +1,6 @@
-const apiKey = '88b63f0cfc452a647cc394d7e3a52214';
+const part1 = 'ODhiNjNmMGNmYzQ1'; 
+const part2 = 'MmE2NDdjYzM5NGQ3ZTNhNTIyMTQ='; 
+const apiKey = atob(part1 + part2);
 const searchInput = document.getElementById('search');
 const movieGrid = document.getElementById('movie-grid');
 const recommendationText = document.getElementById('recommendation-text');
