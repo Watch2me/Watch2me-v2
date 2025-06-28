@@ -203,15 +203,17 @@ const fetchBanner = async () => {
 
         if (trailer) {
             setTimeout(() => {
-                bannerContents.style.display = 'none'; // Hide banner content
-                trailerContainer.style.display = 'block'; // Show trailer container
+                // We no longer hide bannerContents, but play trailer behind it.
+                // bannerContents.style.display = 'none'; // REMOVED
+                trailerContainer.classList.add('show-trailer'); // Add class to show trailer
                 trailerIframe.src = `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}`;
             }, 3000); // 3-second delay
         } else {
             console.log('No trailer found for this movie.');
-            // Optionally, if no trailer is found, keep the banner contents visible
-            bannerContents.style.display = 'block';
-            trailerContainer.style.display = 'none';
+            // If no trailer, ensure the banner contents are visible and trailer container is hidden.
+            // This is already the default state if no trailer is found, so no explicit action needed here for display.
+            trailerContainer.classList.remove('show-trailer'); // Ensure it's hidden
+            trailerIframe.src = ''; // Clear iframe src
         }
 
         // ----------------------
