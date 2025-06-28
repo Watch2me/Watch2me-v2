@@ -118,38 +118,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const movieListContainer = document.getElementById('movie-list-container');
 
     // Check if the list is empty
-    if (movieList.length === 0) {
+    if (movieListContainer && movieList.length === 0) { // Added check for movieListContainer
         movieListContainer.innerHTML = '<p>Your movie list is empty!</p>';
         return;
-    }
+    } else if (movieListContainer) { // Only proceed if container exists
+        // Loop through the list of movies and display them
+        movieList.forEach(movie => {
+            const movieCard = document.createElement('div');
+            movieCard.classList.add('movie-card');
 
-    // Loop through the list of movies and display them
-    movieList.forEach(movie => {
-        const movieCard = document.createElement('div');
-        movieCard.classList.add('movie-card');
+            // Movie poster
+            const moviePoster = document.createElement('img');
+            moviePoster.classList.add('row__poster'); // Same class as the main page
+            moviePoster.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+            moviePoster.alt = movie.title;
 
-        // Movie poster
-const moviePoster = document.createElement('img');
-moviePoster.classList.add('row__poster'); // Same class as the main page
-moviePoster.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-moviePoster.alt = movie.title;
+            // Movie title
+            const movieTitle = document.createElement('p');
+            movieTitle.textContent = movie.title;
 
-        // Movie title
-        const movieTitle = document.createElement('p');
-        movieTitle.textContent = movie.title;
+            // Append poster and title to the movie card
+            movieCard.appendChild(moviePoster);
+            movieCard.appendChild(movieTitle);
 
-        // Append poster and title to the movie card
-        movieCard.appendChild(moviePoster);
-        movieCard.appendChild(movieTitle);
+            // Add the movie card to the movie list container
+            movieListContainer.appendChild(movieCard);
 
-        // Add the movie card to the movie list container
-        movieListContainer.appendChild(movieCard);
-
-        // Add click event to each movie poster to redirect to the movie details page
-        movieCard.addEventListener('click', () => {
-            window.location.href = `movie-details.html?movie_id=${movie.id}`;
+            // Add click event to each movie poster to redirect to the movie details page
+            movieCard.addEventListener('click', () => {
+                window.location.href = `movie-details.html?movie_id=${movie.id}`;
+            });
         });
-    });
+    }
 });
 
 const fetchBanner = async () => {
@@ -161,17 +161,25 @@ const fetchBanner = async () => {
 
         // Select a random movie from the list of popular movies
         const movie = data.results[Math.floor(Math.random() * data.results.length)];
+        const movieId = movie.id;
 
         // ----------------------
         // Update Banner with Movie Data
         // ----------------------
 
-        // Create and add "TOP 10" label
-        const topTenLabel = document.createElement('div');
-        topTenLabel.classList.add('top-ten-label');
-        topTenLabel.textContent = "TOP 10";  // Text "TOP 10" added above the title
         const banner = document.querySelector('.banner');
-        banner.appendChild(topTenLabel);  // Add the label to the banner
+        const bannerContents = document.querySelector('.banner__contents');
+        const trailerContainer = document.getElementById('trailer-container');
+        const trailerIframe = document.getElementById('trailer-iframe');
+
+        // Create and add "TOP 10" label
+        let topTenLabel = document.querySelector('.top-ten-label');
+        if (!topTenLabel) { // Create only if it doesn't exist
+            topTenLabel = document.createElement('div');
+            topTenLabel.classList.add('top-ten-label');
+            banner.appendChild(topTenLabel);
+        }
+        topTenLabel.textContent = "TOP 10";
 
         // Set the banner title to the selected movie's title
         const bannerTitle = document.querySelector('.banner__title');
@@ -185,13 +193,31 @@ const fetchBanner = async () => {
         banner.style.backgroundImage = `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`;
 
         // ----------------------
+        // Fetch and Play Trailer
+        // ----------------------
+        const videosUrl = `${baseUrl}/movie/${movieId}/videos?api_key=${apiKey}`;
+        const videosResponse = await fetch(videosUrl);
+        const videosData = await videosResponse.json();
+
+        const trailer = videosData.results.find(video => video.type === 'Trailer' && video.site === 'YouTube');
+
+        if (trailer) {
+            setTimeout(() => {
+                bannerContents.style.display = 'none'; // Hide banner content
+                trailerContainer.style.display = 'block'; // Show trailer container
+                trailerIframe.src = `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}`;
+            }, 3000); // 3-second delay
+        } else {
+            console.log('No trailer found for this movie.');
+            // Optionally, if no trailer is found, keep the banner contents visible
+            bannerContents.style.display = 'block';
+            trailerContainer.style.display = 'none';
+        }
+
+        // ----------------------
         // Play Button Functionality
         // ----------------------
-
-        // Get the Play button
         const playButton = document.getElementById('play-button');
-
-        // Add event listener to the Play button to navigate to movie details
         playButton.addEventListener('click', () => {
             window.location.href = `movie-details.html?movie_id=${movie.id}`;
         });
@@ -258,7 +284,7 @@ document.addEventListener('click', function(event) {
     const iconsContainer = document.querySelector('.icons-container');
 
     // Check if the click was outside the search bar or any of the icons
-    if (!searchBar.contains(event.target) && !iconsContainer.contains(event.target)) {
+    if (searchBar && iconsContainer && !searchBar.contains(event.target) && !iconsContainer.contains(event.target)) {
         searchBar.classList.remove('show');
     }
 });
@@ -290,6 +316,8 @@ let currentServerIndex = 0; // To store which server is currently selected
 
 // Fetch movie details based on the movieId
 const fetchMovieDetails = async () => {
+    if (!movieId) return; // Exit if no movie ID is found
+
     try {
         // Fetch the movie details using the movie ID
         const url = `${baseUrl}/movie/${movieId}?api_key=${apiKey}&language=en-US`;
@@ -298,65 +326,70 @@ const fetchMovieDetails = async () => {
 
         // Movie Poster
         const posterUrl = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-        document.getElementById('movie-poster').src = posterUrl;
+        const moviePosterElement = document.getElementById('movie-poster');
+        if (moviePosterElement) moviePosterElement.src = posterUrl;
 
         // Movie Background
         const backdropUrl = movie.backdrop_path ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}` : 'https://via.placeholder.com/1500x800?text=No+Backdrop+Available';
-        document.querySelector('.blurred-background').style.backgroundImage = `url(${backdropUrl})`;
+        const blurredBackground = document.querySelector('.blurred-background');
+        if (blurredBackground) blurredBackground.style.backgroundImage = `url(${backdropUrl})`;
 
         // Movie Description
-        document.getElementById('movie-description').textContent = movie.overview;
+        const movieDescriptionElement = document.getElementById('movie-description');
+        if (movieDescriptionElement) movieDescriptionElement.textContent = movie.overview;
 
         // Movie Rating (star rating)
         const movieRating = movie.vote_average; // Rating from 1 to 10
         const starContainer = document.getElementById('movie-rating');
-        starContainer.innerHTML = ''; // Clear existing stars
+        if (starContainer) {
+            starContainer.innerHTML = ''; // Clear existing stars
 
-        const filledStars = Math.round(movieRating / 2); // Convert 10-point rating to 5-point scale
-        const emptyStars = 5 - filledStars;
+            const filledStars = Math.round(movieRating / 2); // Convert 10-point rating to 5-point scale
+            const emptyStars = 5 - filledStars;
 
-        // Add filled stars
-        for (let i = 0; i < filledStars; i++) {
-            const star = document.createElement('span');
-            star.classList.add('star', 'filled');
-            starContainer.appendChild(star);
-        }
+            // Add filled stars
+            for (let i = 0; i < filledStars; i++) {
+                const star = document.createElement('span');
+                star.classList.add('star', 'filled');
+                starContainer.appendChild(star);
+            }
 
-        // Add empty stars
-        for (let i = 0; i < emptyStars; i++) {
-            const star = document.createElement('span');
-            star.classList.add('star', 'empty');
-            starContainer.appendChild(star);
+            // Add empty stars
+            for (let i = 0; i < emptyStars; i++) {
+                const star = document.createElement('span');
+                star.classList.add('star', 'empty');
+                starContainer.appendChild(star);
+            }
         }
 
         // Movie Release Date
-        document.getElementById('release-date-text').textContent = `: ${movie.release_date}`;
+        const releaseDateTextElement = document.getElementById('release-date-text');
+        if (releaseDateTextElement) releaseDateTextElement.textContent = `: ${movie.release_date}`;
 
         // Movie Genres
         const genreContainer = document.getElementById('movie-genres');
-        genreContainer.innerHTML = ''; // Clear existing genres
-        movie.genres.forEach(genre => {
-            const genreElement = document.createElement('span');
-            genreElement.classList.add('genre');
-            genreElement.textContent = genre.name;
-            genreContainer.appendChild(genreElement);
-        });
+        if (genreContainer) {
+            genreContainer.innerHTML = ''; // Clear existing genres
+            movie.genres.forEach(genre => {
+                const genreElement = document.createElement('span');
+                genreElement.classList.add('genre');
+                genreElement.textContent = genre.name;
+                genreContainer.appendChild(genreElement);
+            });
+        }
 
         const watchNowBtn = document.getElementById('watch-now-btn');
-        watchNowBtn.addEventListener('click', () => {
-            // Fetch the current movie history
-
-            // Now load the movie iframe for watching
-            const iframeContainer = document.getElementById('iframe-container');
-            iframeContainer.style.display = 'flex'; // Show iframe container
-        
-            // Inject iframe inside iframe container
-            const iframe = document.getElementById('movie-iframe');
-            iframe.src = `${MOVIE_ENDPOINTS[currentServerIndex].url}${movieId}?primaryColor=ffffff&secondaryColor=a2a2a2&iconColor=eefdec&icons=default&player=jw&title=true&poster=true&autoplay=true`; // Use selected server URL
-        
-            // Hide the Watch Now button
-            watchNowBtn.style.display = 'none'; // Hide the Watch Now button
-        });
+        if (watchNowBtn) {
+            watchNowBtn.addEventListener('click', () => {
+                const iframeContainer = document.getElementById('iframe-container');
+                if (iframeContainer) iframeContainer.style.display = 'flex';
+            
+                const iframe = document.getElementById('movie-iframe');
+                if (iframe) iframe.src = `${MOVIE_ENDPOINTS[currentServerIndex].url}${movieId}?primaryColor=ffffff&secondaryColor=a2a2a2&iconColor=eefdec&icons=default&player=jw&title=true&poster=true&autoplay=true`;
+            
+                watchNowBtn.style.display = 'none';
+            });
+        }
 
         // Fetch More Like This Movies
         fetchMoreLikeThis(movieId);
@@ -366,47 +399,43 @@ const fetchMovieDetails = async () => {
         const serverDropdown = document.getElementById('server-dropdown');
         const serverList = document.getElementById('server-list');
 
-        // Populate the server list with custom names
-        MOVIE_ENDPOINTS.forEach((endpoint, index) => {
-            const listItem = document.createElement('li');
-            listItem.textContent = `${endpoint.name}`; // Use custom server name
-            listItem.addEventListener('click', () => changeServer(index));
-            serverList.appendChild(listItem);
-        });
+        if (changeServerBtn && serverDropdown && serverList) {
+            // Populate the server list with custom names
+            MOVIE_ENDPOINTS.forEach((endpoint, index) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${endpoint.name}`; // Use custom server name
+                listItem.addEventListener('click', () => changeServer(index));
+                serverList.appendChild(listItem);
+            });
 
-        // Show dropdown when Change Server button is clicked
-        changeServerBtn.addEventListener('click', () => {
-            serverDropdown.style.display = serverDropdown.style.display === 'none' ? 'block' : 'none';
-        });
+            // Show dropdown when Change Server button is clicked
+            changeServerBtn.addEventListener('click', () => {
+                serverDropdown.style.display = serverDropdown.style.display === 'none' ? 'block' : 'none';
+            });
 
-        // Function to change the server
-        function changeServer(index) {
-            currentServerIndex = index;
-            const iframe = document.getElementById('movie-iframe');
-            iframe.src = `${MOVIE_ENDPOINTS[currentServerIndex].url}${movieId}`; // Update iframe source
+            // Function to change the server
+            function changeServer(index) {
+                currentServerIndex = index;
+                const iframe = document.getElementById('movie-iframe');
+                if (iframe) iframe.src = `${MOVIE_ENDPOINTS[currentServerIndex].url}${movieId}`;
 
-            // Hide the dropdown
-            serverDropdown.style.display = 'none';
-
-            // Log the server change (optional)
-            console.log(`Changed to server: ${MOVIE_ENDPOINTS[currentServerIndex].name}`);
+                serverDropdown.style.display = 'none';
+                console.log(`Changed to server: ${MOVIE_ENDPOINTS[currentServerIndex].name}`);
+            }
         }
 
         const closeBtn = document.getElementById('close-iframe-btn');
-        closeBtn.addEventListener('click', () => {
-            // Hide iframe container
-            const iframeContainer = document.getElementById('iframe-container');
-            iframeContainer.style.display = 'none';
-        
-            // Remove the iframe content by clearing the innerHTML
-            iframeContainer.innerHTML = '';
-        
-            // Show the Watch Now button again
-            watchNowBtn.style.display = 'block'; // Show the Watch Now button
-        
-            // Refresh the page
-            window.location.reload();  // This will reload the page
-        });
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                const iframeContainer = document.getElementById('iframe-container');
+                if (iframeContainer) {
+                    iframeContainer.style.display = 'none';
+                    iframeContainer.innerHTML = ''; // Clear iframe content
+                }
+                if (watchNowBtn) watchNowBtn.style.display = 'block';
+                window.location.reload();
+            });
+        }
         
     } catch (error) {
         console.error('Error fetching movie details:', error);
@@ -415,6 +444,8 @@ const fetchMovieDetails = async () => {
 
 // Fetch More Like This Movies
 const fetchMoreLikeThis = async (movieId) => {
+    if (!movieId) return; // Exit if no movie ID is found
+
     try {
         const url = `${baseUrl}/movie/${movieId}/similar?api_key=${apiKey}&language=en-US`;
         const response = await fetch(url);
@@ -424,34 +455,33 @@ const fetchMoreLikeThis = async (movieId) => {
         const data = await response.json();
 
         const similarMoviesContainer = document.getElementById('similar-movies-container');
-        similarMoviesContainer.innerHTML = ''; // Clear previous similar movies
+        if (similarMoviesContainer) {
+            similarMoviesContainer.innerHTML = ''; // Clear previous similar movies
 
-        // Loop through the results and create movie grid items
-        data.results.forEach(movie => {
-            const movieItem = document.createElement('div');
-            movieItem.classList.add('similar-movie'); // Add the grid item class
+            // Loop through the results and create movie grid items
+            data.results.forEach(movie => {
+                const movieItem = document.createElement('div');
+                movieItem.classList.add('similar-movie');
 
-            // Movie Poster Image
-            const movieImageUrl = movie.poster_path ? `https://image.tmdb.org/t/p/original${movie.poster_path}` : 'https://via.placeholder.com/500x750?text=No+Image';
-            const movieImage = document.createElement('img');
-            movieImage.src = movieImageUrl;
-            movieImage.alt = movie.title;
-            movieImage.classList.add('similar-movie-img'); // Add the image class
+                const movieImageUrl = movie.poster_path ? `https://image.tmdb.org/t/p/original${movie.poster_path}` : 'https://via.placeholder.com/500x750?text=No+Image';
+                const movieImage = document.createElement('img');
+                movieImage.src = movieImageUrl;
+                movieImage.alt = movie.title;
+                movieImage.classList.add('similar-movie-img');
 
-            // Movie Title
-            const movieTitle = document.createElement('span');
-            movieTitle.textContent = movie.title;
-            movieTitle.classList.add('movie-title'); // Optional class for styling titles
+                const movieTitle = document.createElement('span');
+                movieTitle.textContent = movie.title;
+                movieTitle.classList.add('movie-title');
 
-            movieItem.appendChild(movieImage); // Append the image
+                movieItem.appendChild(movieImage);
 
-            // Add click event to redirect to the selected movie page
-            movieItem.addEventListener('click', () => {
-                window.location.href = `?movie_id=${movie.id}`; // Redirect to the selected movie
+                movieItem.addEventListener('click', () => {
+                    window.location.href = `movie-details.html?movie_id=${movie.id}`; // Ensure it navigates to movie-details.html
+                });
+
+                similarMoviesContainer.appendChild(movieItem);
             });
-
-            similarMoviesContainer.appendChild(movieItem); // Append to the container
-        });
+        }
     } catch (error) {
         console.error('Error fetching similar movies:', error);
     }
@@ -470,19 +500,22 @@ fetchMovies('horror', 'horrorMovies');
 fetchMovies('romance', 'romanceMovies');
 fetchMovies('documentary', 'documentaries');
 
-// Fetch banner details
-fetchBanner();
-
 // Initialize arrow buttons functionality after fetching the movie data
 document.addEventListener('DOMContentLoaded', initArrowNavigation);
 
-// JavaScript for the Close Button
-document.getElementById('close-button').addEventListener('click', () => {
-    window.location.href = 'movies.html';  // Redirects to the main page (index.html)
-});
+// JavaScript for the Close Button (on movie-details.html, not movies.html)
+const closeButton = document.getElementById('close-button');
+if (closeButton) { // Check if the close button exists (it's likely on movie-details.html)
+    closeButton.addEventListener('click', () => {
+        window.location.href = 'movies.html';
+    });
+}
 
 window.addEventListener("load", function() {
-    setTimeout(function() {
-        document.getElementById("loading-screen").style.display = "none";
-    }, 1000); // 3000ms = 3 seconds
+    const loadingScreen = document.getElementById("loading-screen");
+    if (loadingScreen) { // Check if loading screen exists
+        setTimeout(function() {
+            loadingScreen.style.display = "none";
+        }, 1000); // 1000ms = 1 second
+    }
 });
