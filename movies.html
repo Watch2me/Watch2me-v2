@@ -36,71 +36,62 @@
   </script>
 
     <!-- Your other content here -->    
-  <header class="banner">
-        <div class="banner__contents">
-            <h1 class="banner__title">Loading...</h1> <!-- This will be replaced dynamically -->
-            <div class="banner__buttons">
-                <!-- Play Button -->
-                <button class="banner__button" id="play-button">Play</button>
-            </div>
-            <h1 class="banner__description">
-                Loading description...
-            </h1> <!-- This will be replaced dynamically -->
+<header class="banner">
+    <div class="banner__contents">
+        <h1 class="banner__title">Loading...</h1>
+        <div class="banner__buttons">
+            <button class="banner__button" id="play-button">Play</button>
         </div>
-
-        <div class="logo-container">
-          <!-- Your Logo -->
-          <img id="logo" class="logo" src="img/Logo.png" alt="Logo">
-        </div>      
-
-        <!-- Floating Message -->
-  <div id="floating-message">
-      If you're enjoying our site, we’d be grateful if you could share it with your friends! Your support keeps us motivated to bring you more exciting content. Help us grow and keep the good vibes rolling! 💖
-      <button onclick="closeMessage()">OK</button>
-  </div>
-      
-  <div class="icons-container">
-    <!-- Search Icon -->
-    <div class="icon" onclick="openSearchPage()">
-        <i class="fas fa-search"></i>
+        <h1 class="banner__description">
+            Loading description...
+        </h1>
     </div>
 
-    <!-- Movies Icon -->
-    <div class="icon">
-        <a href="movies.html">
-            <i class="fas fa-film"></i> <!-- Movies Icon -->
-        </a>
+    <div id="trailer-container" style="display: none;">
+        <iframe id="trailer-iframe" width="100%" height="100%" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
     </div>
 
-    <!-- TV Shows Icon -->
-    <div class="icon">
-        <a href="tvshows.html">
-            <i class="fas fa-tv"></i> <!-- TV Shows Icon -->
-        </a>
-    </div>
+    <div class="logo-container">
+        <img id="logo" class="logo" src="img/Logo.png" alt="Logo">
+    </div>      
 
+    <div id="floating-message">
+        If you're enjoying our site, we’d be grateful if you could share it with your friends! Your support keeps us motivated to bring you more exciting content. Help us grow and keep the good vibes rolling! 💖
+        <button onclick="closeMessage()">OK</button>
+    </div>
+    
+    <div class="icons-container">
+        <div class="icon" onclick="openSearchPage()">
+            <i class="fas fa-search"></i>
+        </div>
         <div class="icon">
-        <a href="sorting.html">
-          <i class="fa fa-sort"></i>
-        </a>
-    </div
-        
-    <!-- Add to List Icon -->  
-    <div class="icon">
-    <a href="https://t.me/watch2mechat" target="_blank">
-      <i class="fab fa-telegram-plane"></i> <!-- Add to List Icon -->
-    </a>
-  </div>
-
-      <!-- Add to List Icon -->
-      <div class="icon">
-        <a href="add-to-list.html">
-          <i class="fa fa-list-alt"></i>
-        </a>
-      </div> 
-  </div>
-        <div class="banner--fadeBottom"></div>
-      </header> 
+            <a href="movies.html">
+                <i class="fas fa-film"></i>
+            </a>
+        </div>
+        <div class="icon">
+            <a href="tvshows.html">
+                <i class="fas fa-tv"></i>
+            </a>
+        </div>
+        <div class="icon">
+            <a href="sorting.html">
+                <i class="fa fa-sort"></i>
+            </a>
+        </div>
+        <div class="icon">
+            <a href="https://t.me/watch2mechat" target="_blank">
+                <i class="fab fa-telegram-plane"></i>
+            </a>
+        </div>
+        <div class="icon">
+            <a href="add-to-list.html">
+                <i class="fa fa-list-alt"></i>
+            </a>
+        </div> 
+    </div>
+    <div class="banner--fadeBottom"></div>
+</header> 
       
       <div class="row">
         <h4>TOP<span class="content-today">C o n t e n t<br>T o d a y</span></h4> 
