@@ -1773,51 +1773,29 @@ h4 {
 
 /* Ensure the banner is a positioning context */
 .banner {
-    position: relative;
-    overflow: hidden;
-    /* Add other banner styles like height, background-size, etc. */
+    position: relative; /* Ensure banner is a positioning context */
+    overflow: hidden; /* Hide any overflow from the trailer */
 }
 
-/* Style for the container holding the banner text and buttons */
-.banner__contents {
-    position: relative; /* Crucial for z-index to work */
-    z-index: 2; /* Make sure this is higher than the trailer-container */
-    /* Add existing styles for your banner contents (padding, text color, etc.) */
-}
-
-/* Style for the trailer iframe container */
 #trailer-container {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1; /* Make sure this is lower than banner__contents */
-    pointer-events: none; /* Allows clicks to pass through to elements behind it */
-    opacity: 0; /* Initially hidden with opacity for smooth transition */
-    transition: opacity 1s ease-in-out; /* Smooth transition for opacity */
-}
-
-#trailer-container.show-trailer {
-    opacity: 1; /* When this class is added, the trailer becomes visible */
-    pointer-events: auto; /* Re-enable pointer events when visible */
+    z-index: 1; /* Make sure it's above other banner content when visible */
+    display: flex; /* Use flexbox for centering if needed */
+    justify-content: center;
+    align-items: center;
 }
 
 #trailer-iframe {
     width: 100%;
     height: 100%;
-    /* You might want to use object-fit: cover if you have issues with aspect ratio */
-    object-fit: cover;
 }
 
-/* Add a fade to the bottom of the banner to make text more readable over video */
-.banner--fadeBottom {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 10rem; /* Adjust as needed */
-    background-image: linear-gradient(180deg, transparent, rgba(37,37,37,0.61), #111);
-    z-index: 3; /* Keep fade on top of trailer but behind content if content goes low */
-    /* You might need to adjust z-index if content is pushed really low */
+.banner__contents {
+    position: relative; /* Ensure banner contents are positioned */
+    z-index: 2; /* Make sure contents are above trailer initially */
+    /* Add other styling for your banner content */
 }
