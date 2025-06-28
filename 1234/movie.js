@@ -202,18 +202,19 @@ const fetchBanner = async () => {
         const trailer = videosData.results.find(video => video.type === 'Trailer' && video.site === 'YouTube');
 
         if (trailer) {
+            // Set the iframe source immediately, but it will be hidden by CSS opacity
+            // Standard YouTube embed URL: https://www.youtube.com/embed/VIDEO_ID
+            trailerIframe.src = `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}&modestbranding=1&rel=0`;
+
             setTimeout(() => {
-                // We no longer hide bannerContents, but play trailer behind it.
-                // bannerContents.style.display = 'none'; // REMOVED
-                trailerContainer.classList.add('show-trailer'); // Add class to show trailer
-                trailerIframe.src = `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.key}`;
+                // Add class to show trailer (fades in due to CSS transition)
+                trailerContainer.classList.add('show-trailer');
             }, 3000); // 3-second delay
         } else {
             console.log('No trailer found for this movie.');
-            // If no trailer, ensure the banner contents are visible and trailer container is hidden.
-            // This is already the default state if no trailer is found, so no explicit action needed here for display.
-            trailerContainer.classList.remove('show-trailer'); // Ensure it's hidden
-            trailerIframe.src = ''; // Clear iframe src
+            // Ensure trailer container is hidden and its source is cleared
+            trailerContainer.classList.remove('show-trailer');
+            trailerIframe.src = '';
         }
 
         // ----------------------
@@ -226,7 +227,7 @@ const fetchBanner = async () => {
 
     } catch (error) {
         console.error('Error fetching banner data:', error);
-    }
+    };
 };
 
 // Load a random movie for the banner when the page loads
