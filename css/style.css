@@ -1771,31 +1771,3 @@ h4 {
   }
 }
 
-/* Ensure the banner is a positioning context */
-.banner {
-    position: relative; /* Ensure banner is a positioning context */
-    overflow: hidden; /* Hide any overflow from the trailer */
-}
-
-#trailer-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1; /* Make sure it's above other banner content when visible */
-    display: flex; /* Use flexbox for centering if needed */
-    justify-content: center;
-    align-items: center;
-}
-
-#trailer-iframe {
-    width: 100%;
-    height: 100%;
-}
-
-.banner__contents {
-    position: relative; /* Ensure banner contents are positioned */
-    z-index: 2; /* Make sure contents are above trailer initially */
-    /* Add other styling for your banner content */
-}
