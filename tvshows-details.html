@@ -1,131 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
-	 <head>
-      <meta charset="UTF-8" />
-      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <meta name="apple-mobile-web-app-capable" content="yes">
-      <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-      <link rel="apple-touch-icon" href="img/Favicon.png">
-	<link rel="icon" href="img/Favicon.png" type="image/x-icon">
-      <title>TVShows Details</title>
-      <link rel="stylesheet" href="css/style.css" />
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-      <link rel="manifest" href="manifest.json">
-      <link rel="preload" href="css/style.css" as="style">
-      <link rel="preload" href="1234/tvshows.js" as="tvshows">
-  </head>  
-	
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="img/Favicon.png">
+    <link rel="icon" href="img/Favicon.png" type="image/x-icon">
+    <title>WATCH2ME TV Show Details</title>
+    <!-- Link to your external stylesheet -->
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://db.onlinewebfonts.com/c/25ee966fb81cd61ffdfb393e81c7bf4b?family=Electronica+Display+Outline" rel="stylesheet">
+</head>
 <body>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YZ8V3HXD2E"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <!-- Blurred Background -->
+    <div class="blurred-background" id="blurred-background"></div>
 
-  gtag('config', 'G-YZ8V3HXD2E');
-</script>
+    <!-- Close Button -->
+    <button class="close-button" id="close-button">&times;</button>
 
+    <!-- Main TV Show Details Container -->
+    <div class="tv-show-details-container">
+        <!-- Top Section (Poster, Title, Description, Rating, Year, Genres, Season/Episode Selection) -->
+        <div class="top-section">
+            <!-- TV Show Poster -->
+            <div class="tv-show-poster-wrapper">
+                <img id="tv-show-poster" class="tv-show-poster" src="https://placehold.co/300x450/000000/FFFFFF?text=Loading..." alt="TV Show Poster">
+            </div>
 
-     <!-- Loading Screen -->
-     <div id="loading-screen" class="loading-screen">
-        <div class="spinner"></div>
-        <p class="loading-text">Loading...</p> <!-- Add this text -->
-    </div>
+            <!-- TV Show Information Content (Title, Description, Rating, Year, Genres, and Season/Episode Selection) -->
+            <div class="info-description-watch-container">
+                <h1 id="tv-show-title">Loading Title...</h1>
+                <p id="tv-show-description">Loading Description...</p>
+                <!-- Rating and Year Container -->
+                <div class="rating-year-container">
+                    <div class="tv-show-rating" id="tv-show-rating">
+                        <!-- Stars will be populated here -->
+                    </div>
+                    <div class="tv-show-first-air-date">
+                         <span id="first-air-date-text">Loading...</span>
+                    </div>
+                </div>
+                <!-- Genres Container (inline with other info) -->
+                <div class="tv-show-genres-inline" id="tv-show-genres-inline">
+                    <!-- Genres will be populated here -->
+                </div>
+                <!-- Season and Episode Selection -->
+                <div class="season-episode-selection">
+                    <button id="season-btn" class="selection-btn">Select Season</button>
+                    <ul id="seasons-list" class="dropdown-list"></ul>
 
-    <div class="blurred-background"></div> <!-- Background Container -->
-    
-    <div class="tv-show-details">
-        <!-- Close Button (X) for the main UI -->
-        <button class="close-button" id="close-button">&times;</button>
-
-        <!-- Poster Container -->
-        <div class="tv-show-poster-container">
-            <img id="tv-show-poster" alt="TV Show Poster" class="tv-show-poster" src="images/https:-watch2day.site">
-            <!-- Button Container -->
-            <div id="season-btn-container">
-                <div id="season-btn">Select Season</div>
-            <ul id="seasons-list" class="dropdown-list"></ul>
-            <button id="episode-btn" style="display: none;">Select Episode</button>
-            <ul id="episodes-list" class="dropdown-list"></ul>
-            </div>            
+                    <button id="episode-btn" class="selection-btn" style="display: none;">Select Episode</button>
+                    <ul id="episodes-list" class="dropdown-list"></ul>
+                </div>
+                <!-- The "Watch Now" button is removed as per request -->
+            </div>
         </div>
 
-        <h1 id="tv-show-title"></h1>
-        <p id="tv-show-description"></p>
-
-        <!-- Genre Section -->
-        <div class="tv-show-genres" id="tv-show-genres"></div>
-
-        <div class="tv-show-info">
-            <div class="tv-show-rating" id="tv-show-rating"></div>
-            <div class="tv-show-first-air-date" id="tv-show-first-air-date">
-                <i class="fas fa-calendar-alt"></i> <!-- Calendar Icon -->
-                <span id="air-date-text"></span> <!-- Air Date Text -->
-              </div>  
-             </div> 
-
-
-<div id="more-like-this">
-    <h3>More Like This</h3>
-    <div id="similar-shows-container">
-        <!-- TV show items will be appended here dynamically -->
-    </div>
-</div>
-
-        <!-- Season Dropdown (Initially Hidden) -->
-        <div id="seasons-dropdown" class="seasons-dropdown" style="display: none;">
-            <ul id="seasons-list"></ul>
+        <!-- TV Show Cast Section -->
+        <div class="tv-show-cast-section">
+            <h3>Cast</h3>
+            <div class="cast-list" id="tv-show-cast">
+                <!-- Cast members will be populated here -->
+            </div>
         </div>
-        
-        <!-- Episode Dropdown (Initially Hidden) -->
-        <div id="episodes-dropdown" class="episodes-dropdown" style="display: none;">
-            <ul id="episodes-list"></ul>
+
+        <!-- Similar TV Shows Section -->
+        <div class="similar-tv-shows-section">
+            <h3>More Like This</h3>
+            <div class="similar-tv-shows-grid" id="similar-tv-shows-container">
+                <!-- Similar TV shows will be populated here -->
+            </div>
         </div>
     </div>
 
-  <!-- Iframe Container for watching the show -->
-<div id="iframe-container" style="display: none;">
-    <div class="iframe-controls">     
+    <!-- Iframe Container for Watching TV Show -->
+    <div id="iframe-container">
+        <div class="iframe-controls">
+            <button id="change-server-btn">Change Server</button>
+            <button id="close-iframe-btn">Close</button>
+        </div>
+        <div class="server-dropdown" id="server-dropdown">
+            <ul id="server-list">
+                <!-- Server options will be populated here -->
+            </ul>
+        </div>
+        <iframe id="tv-show-iframe" src="" frameborder="0" allowfullscreen></iframe>
     </div>
 
-    <iframe id="movie-iframe" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
-
-    <!-- Close Button for iframe container -->
-    <button id="close-iframe-btn">Close</button>
-
-    <!-- Change Server Button -->
-    <button id="change-server-btn">Change Server</button>
-
-    <!-- Server dropdown list (Initially Hidden) -->
-    <div id="server-dropdown" class="server-dropdown" style="display:none;">
-        <ul id="server-list">
-            <!-- List of servers will be dynamically populated -->
-        </ul>
-    </div>
-</div>
-
-    <script src="1234/tvshows.js"></script> <!-- External JS file for TV show details -->
-
-      <script src="https://cdn.jsdelivr.net/npm/disable-devtool"></script>
+    <!-- Link to your external JavaScript file -->
+    <script src="1234/tvshows.js"></script>
     <script>
-        DisableDevtool({
-            // The parameters are the same as in 3.1
-        })
-    </script>
-
-    <script src="1234/protection.js"></script>
-
-    <script>
-        var message="Not Allowed... THANK YOU!!!";
-        var shouldAlert=1;
-        document.oncontextmenu=function(){
-            if(shouldAlert==1){
-                alert(message);
-            }
-            return false;
-        };
+        // Ensure fetchTVShowDetails is called after the DOM is loaded
+        document.addEventListener('DOMContentLoaded', fetchTVShowDetails);
     </script>
 </body>
 </html>
