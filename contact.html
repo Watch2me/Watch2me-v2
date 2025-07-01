@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="img/Favicon.png">
+    <link rel="icon" href="img/Favicon.png" type="image/x-icon">
+    <title>WATCH2ME - Contact Us</title>
+    <link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="css/info-pages.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="preload" href="css/style.css" as="style">
+    <link href="https://db.onlinewebfonts.com/c/25ee966fb81cd61ffdfb393e81c7bf4b?family=Electronica+Display+Outline" rel="stylesheet">
+</head>       
+<body>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YZ8V3HXD2E"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-YZ8V3HXD2E');
+    </script>
+
+    <button class="go-back-btn" onclick="window.history.back()">
+        <i class="fas fa-arrow-left"></i> Go Back
+    </button>
+
+    <main class="terms-content-container"> <!-- Reusing the container class for consistent styling -->
+        <h4 class="top-label">Contact Us</h4>
+        <p><em>Last updated: July 1, 2025</em></p>
+
+        <section>
+            <h2>Get in Touch with WATCH2ME</h2>
+            <p>We're here to help! If you have any questions, feedback, or encounter any issues while using WATCH2ME, please don't hesitate to reach out to us.</p>
+            <p>The fastest way to get support and connect with our community is through our official Telegram channel:</p>
+            <p style="text-align: center; margin: 20px 0;">
+                <a href="https://t.me/watch2mechat" target="_blank" class="contact-telegram-btn">
+                    <i class="fab fa-telegram-plane"></i> Join our Telegram Channel
+                </a>
+            </p>
+            <p>Our team is active on Telegram and will do our best to respond to your inquiries as quickly as possible.</p>
+        </section>
+
+        <section>
+            <h2>General Inquiries (Form - Non-Functional)</h2>
+            <p>For general inquiries, you can use the form below. Please note that this form is for illustrative purposes only and requires a backend setup to send messages. For immediate assistance, please use our Telegram channel.</p>
+            <form class="contact-form">
+                <div class="form-group">
+                    <label for="name">Your Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Your Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject">Subject:</label>
+                    <input type="text" id="subject" name="subject" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+            <p style="font-size: 0.9em; color: #aaa; margin-top: 15px;"><em>Please note: This form is not currently functional. For support, please use our Telegram channel.</em></p>
+        </section>
+
+        <section>
+            <h2>Response Time</h2>
+            <p>We aim to respond to all inquiries within 24-48 hours. Your patience is appreciated.</p>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/disable-devtool"></script>
+    <script>
+        DisableDevtool({
+            // The parameters are the same as in 3.1
+        })
+    </script>
+
+    <script src="1234/protection.js"></script>
+
+    <script>
+        var message="Not Allowed... THANK YOU!!!";
+        var shouldAlert=1;
+        document.oncontextmenu=function(){
+            if(shouldAlert==1){
+                alert(message);
+            }
+            return false;
+        };
+
+        // Placeholder for openSearchPage function if it's not defined in protection.js
+        function openSearchPage() {
+            console.log("Search page functionality to be implemented.");
+            // You might want to redirect to a search page here, e.g., window.location.href = 'search.html';
+        }
+    </script>
+</body>
+</html>

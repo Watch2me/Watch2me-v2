@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WATCH2ME All Movies</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="icon" href="img/Favicon.png" type="image/x-icon">
+</head>
+<body>
+    <button class="go-back-btn" onclick="window.history.back()">
+        <i class="fas fa-arrow-left"></i> Go Back
+    </button>
+
+    <div class="container">
+        <div class="filter-section">
+            <h4 class="top-label">Explore<span class="content-today">Movies</span></h4>
+            <div class="filter-controls">
+                <div class="filter-dropdown">
+                    <select id="genre-select">
+                        <option value="">Select genres</option>
+                        </select>
+                </div>
+                <div class="filter-dropdown">
+                    <select id="sort-by-select">
+                        <option value="">Sort by</option>
+                        <option value="popularity.desc">Popularity Descending</option>
+                        <option value="popularity.asc">Popularity Ascending</option>
+                        <option value="vote_average.desc">Rating Descending</option>
+                        <option value="vote_average.asc">Rating Ascending</option>
+                        <option value="release_date.desc">Release Date Descending</option>
+                        <option value="release_date.asc">Release Date Ascending</option>
+                    </select>
+                </div>
+                <div class="filter-dropdown">
+                    <select id="year-select">
+                        <option value="">Select Year</option>
+                        </select>
+                </div>
+                <div class="filter-checkbox">
+                    <input type="checkbox" id="4k-checkbox">
+                    <label for="4k-checkbox">4K</label>
+                </div>
+            </div>
+        </div>
+        <h2 id="all-movies-title">Loading Movies...</h2>
+        <div id="all-movies-container" class="grid">
+        </div>
+        <div id="loading-spinner" class="loading-spinner" style="display: none;"></div>
+        <p id="no-more-movies" style="text-align: center; color: #ccc; margin-top: 20px; display: none;">No more movies to load.</p>
+    </div>
+
+    <script src="1234/movie-all.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/disable-devtool"></script>
+    <script>
+        DisableDevtool({
+            // The parameters are the same as in 3.1
+        })
+    </script>
+    <script src="1234/protection.js"></script>
+    <script>
+        var message="Not Allowed... THANK YOU!!!";
+        var shouldAlert=1;
+        document.oncontextmenu=function(){
+            if(shouldAlert==1){
+                alert(message);
+            }
+            return false;
+        };
+    </script>
+</body>
+</html>
