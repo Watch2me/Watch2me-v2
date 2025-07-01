@@ -1,0 +1,183 @@
+/* Styles common to informational pages (Terms, FAQs, Privacy, Contact) */
+
+/* Go Back Button Styling */
+.go-back-btn {
+    background-color: #e50914; /* Netflix red */
+    color: #ffffff;
+    border: none;
+	top: 10px;
+    left: 10px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 20px; /* Adjust margin as needed */
+    transition: background-color 0.3s ease;
+    text-decoration: none; /* Ensure it doesn't look like a link if it's an anchor */
+    width: fit-content; /* Adjust width to content */
+}
+
+.go-back-btn:hover {
+    background-color: #ff0b1c; /* Lighter red on hover */
+}
+
+.go-back-btn i {
+    font-size: 18px;
+}
+
+/* Main Content Container Styling */
+.terms-content-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #282828; /* Slightly lighter dark background for content area */
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Top Label (e.g., "CONTACT US", "Terms of Service") */
+.top-label {
+    font-family: 'Electronica Display Outline', sans-serif; /* Use the special font */
+    font-size: 3.5em; /* Larger size for impact */
+    color: #e50914; /* Red color for emphasis */
+    text-align: center;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+    line-height: 1; /* Adjust line height for single line text */
+}
+
+/* Headings within content */
+.terms-content-container h2 {
+    color: #ffffff; /* White for section headings */
+    font-size: 1.8em;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #e50914; /* Red underline */
+    padding-bottom: 8px;
+}
+
+/* Paragraphs within content */
+.terms-content-container p {
+    color: #c0c0c0; /* Lighter grey for body text */
+    margin-bottom: 15px;
+}
+
+/* Telegram Button Styling (from contact.html) */
+.contact-telegram-btn {
+    display: inline-flex; /* Use flex for icon and text alignment */
+    align-items: center;
+    gap: 10px; /* Space between icon and text */
+    background-color: #0088cc; /* Telegram blue */
+    color: #ffffff;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.contact-telegram-btn:hover {
+    background-color: #007bb5; /* Darker blue on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+.contact-telegram-btn i {
+    font-size: 1.3em;
+}
+
+/* Contact Form Styling (from contact.html) */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Space between form groups */
+    margin-top: 30px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    color: #ffffff; /* White for labels */
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group textarea {
+    background-color: #3a3a3a; /* Darker input background */
+    border: 1px solid #555555; /* Subtle border */
+    color: #e0e0e0; /* Light text color for input */
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 1em;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group textarea:focus {
+    border-color: #e50914; /* Red border on focus */
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.3); /* Soft red glow */
+}
+
+.form-group textarea {
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 100px;
+}
+
+.submit-btn {
+    background-color: #e50914; /* Netflix red */
+    color: #ffffff;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    align-self: flex-start; /* Align button to the left */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.submit-btn:hover {
+    background-color: #ff0b1c; /* Lighter red on hover */
+    transform: translateY(-2px);
+}
+
+/* Responsive adjustments for info pages */
+@media (max-width: 768px) {
+    .terms-content-container {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .top-label {
+        font-size: 2.5em;
+    }
+
+    .terms-content-container h2 {
+        font-size: 1.5em;
+    }
+}
+
+@media (max-width: 480px) {
+    .go-back-btn {
+        margin: 15px;
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+
+    .top-label {
+        font-size: 2em;
+    }
+}
