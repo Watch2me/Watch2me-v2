@@ -16,6 +16,12 @@
       <link rel="preload" href="1234/movie.js" as="app">
       <link rel="preload" href="1234/tvshows.js" as="tvshows">
       <link href="https://db.onlinewebfonts.com/c/25ee966fb81cd61ffdfb393e81c7bf4b?family=Electronica+Display+Outline" rel="stylesheet">
+  <script type="text/javascript" data-cfasync="false">
+/*<![CDATA[/* */
+(function(){var g=window,f="c0713d1b10d7cd23633d058445a43671",d=[["siteId",978+848*804*382-255232417],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],y=["d3d3LmJldHRlcmFkc3lzdGVtLmNvbS9XL29CYWNvbi5taW4uanM=","ZDJrazBvM2ZyN2VkMDEuY2xvdWRmcm9udC5uZXQvZnZxVi94VFJGaC9yYWxhYy5taW4uY3Nz"],v=-1,s,z,l=function(){clearTimeout(z);v++;if(y[v]&&!(1777041288000<(new Date).getTime()&&1<v)){s=g.document.createElement("script");s.type="text/javascript";s.async=!0;var a=g.document.getElementsByTagName("script")[0];s.src="https://"+atob(y[v]);s.crossOrigin="anonymous";s.onerror=l;s.onload=function(){clearTimeout(z);g[f.slice(0,16)+f.slice(0,16)]||l()};z=setTimeout(l,5E3);a.parentNode.insertBefore(s,a)}};if(!g[f]){try{Object.freeze(g[f]=d)}catch(e){}l()}})();
+/*]]>/* */
+</script>
+
   </head> 
     
   <body>
@@ -30,110 +36,111 @@
   </script>
 
     <!-- Your other content here -->    
-  <header class="banner">
-        <div class="banner__contents">
-            <h1 class="banner__title">Loading...</h1> <!-- This will be replaced dynamically -->
-            <div class="banner__buttons">
-                <!-- Play Button -->
-                <button class="banner__button" id="play-button">Play</button>
-            </div>
-            <h1 class="banner__description">
-                Loading description...
-            </h1> <!-- This will be replaced dynamically -->
+<header class="banner">
+    <div class="banner__contents">
+        <h1 class="banner__title">Loading...</h1>
+        <div class="banner__buttons">
+            <button class="banner__button" id="play-button">Play</button>
         </div>
-
-        <div class="logo-container">
-          <!-- Your Logo -->
-          <img id="logo" class="logo" src="img/Logo.png" alt="Logo">
-        </div>      
-
-        <!-- Floating Message -->
-  <div id="floating-message">
-      If you're enjoying our site, we’d be grateful if you could share it with your friends! Your support keeps us motivated to bring you more exciting content. Help us grow and keep the good vibes rolling! 💖
-      <button onclick="closeMessage()">OK</button>
-  </div>
-      
-  <div class="icons-container">
-    <!-- Search Icon -->
-    <div class="icon" onclick="openSearchPage()">
-        <i class="fas fa-search"></i>
+        <h1 class="banner__description">
+            Loading description...
+        </h1>
     </div>
 
-    <!-- Movies Icon -->
-    <div class="icon">
-        <a href="movies.html">
-            <i class="fas fa-film"></i> <!-- Movies Icon -->
-        </a>
+    <div id="trailer-container" style="display: none;">
+        <iframe id="trailer-iframe" width="100%" height="100%" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
     </div>
 
-    <!-- TV Shows Icon -->
-    <div class="icon">
-        <a href="tvshows.html">
-            <i class="fas fa-tv"></i> <!-- TV Shows Icon -->
-        </a>
-    </div>
+    <div class="logo-container">
+        <img id="logo" class="logo" src="img/Logo.png" alt="Logo">
+    </div>      
 
+    <div id="floating-message">
+        If you're enjoying our site, we’d be grateful if you could share it with your friends! Your support keeps us motivated to bring you more exciting content. Help us grow and keep the good vibes rolling! 💖
+        <button onclick="closeMessage()">OK</button>
+    </div>
+    
+    <div class="icons-container">
+        <div class="icon" onclick="openSearchPage()">
+            <i class="fas fa-search"></i>
+        </div>
         <div class="icon">
-        <a href="sorting.html">
-          <i class="fa fa-sort"></i>
-        </a>
-    </div
-        
-    <!-- Add to List Icon -->  
-    <div class="icon">
-    <a href="https://t.me/watch2mechat" target="_blank">
-      <i class="fab fa-telegram-plane"></i> <!-- Add to List Icon -->
-    </a>
-  </div>
+            <a href="movies.html">
+                <i class="fas fa-film"></i>
+            </a>
+        </div>
+        <div class="icon">
+            <a href="tvshows.html">
+                <i class="fas fa-tv"></i>
+            </a>
+        </div>
+        <div class="icon">
+            <a href="sorting.html">
+                <i class="fa fa-sort"></i>
+            </a>
+        </div>
+        <div class="icon">
+            <a href="https://t.me/watch2mechat" target="_blank">
+                <i class="fab fa-telegram-plane"></i>
+            </a>
+        </div>
+        <div class="icon">
+            <a href="add-to-list.html">
+                <i class="fa fa-list-alt"></i>
+            </a>
+        </div> 
+    </div>
+    <div class="banner--fadeBottom"></div>
+</header> 
 
-      <!-- Add to List Icon -->
-      <div class="icon">
-        <a href="add-to-list.html">
-          <i class="fa fa-list-alt"></i>
-        </a>
-      </div> 
-  </div>
-        <div class="banner--fadeBottom"></div>
-      </header> 
-      
+      <!-- Popular -->
       <div class="row">
-        <h4>TOP<span class="content-today">C o n t e n t<br>T o d a y</span></h4> 
-            <div class="row__posters" id="netflixOriginals">
-            <!-- Movie posters will be added here dynamically -->
-          </div>
-          <div class="arrow-buttons">
-            <button class="arrow-button prev"><i class="fas fa-chevron-left"></i></button>
-            <button class="arrow-button next"><i class="fas fa-chevron-right"></i></button>
-          </div>
-        </div>       
+	  <div style="display: flex; justify-content: space-between; align-items: center; margin-right: 20px;">
+    <h4 class="top-label">TOP<span class="content-today">CONTENT<br>TODAY</span></h4>
+    <a href="movie-all.html?category=popular" class="view-all-button">View All</a>
+    </div>
+    <div class="row__posters" id="netflixOriginals">
+        </div>
+    <div class="arrow-buttons">
+        <button class="arrow-button prev"><i class="fas fa-chevron-left"></i></button>
+        <button class="arrow-button next"><i class="fas fa-chevron-right"></i></button>
+    </div>
+	</div>       
 
       <!-- Trending Now -->
       <div class="row">
-          <h2>Trending Now</h2>
-          <div class="row__posters" id="trendingNow">
-              <!-- Movie posters will be populated here -->
-          </div>
-          <div class="arrow-buttons">
-            <button class="arrow-button prev"><i class="fas fa-chevron-left"></i></button>
-            <button class="arrow-button next"><i class="fas fa-chevron-right"></i></button>
-          </div>
-        </div>    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-right: 20px;">
+        <h2>Trending Now</h2>
+        <a href="movie-all.html?category=trending" class="view-all-button">View All</a>
+    </div>
+    <div class="row__posters" id="trendingNow">
+        </div>
+    <div class="arrow-buttons">
+        <button class="arrow-button prev"><i class="fas fa-chevron-left"></i></button>
+        <button class="arrow-button next"><i class="fas fa-chevron-right"></i></button>
+    </div>
+	</div>    
 
       <!-- Top Rated -->
       <div class="row">
-          <h2>Top Rated</h2>
-          <div class="row__posters" id="topRated">
-              <!-- Movie posters will be populated here -->
-          </div>
-          <div class="arrow-buttons">
-            <button class="arrow-button prev"><i class="fas fa-chevron-left"></i></button>
-            <button class="arrow-button next"><i class="fas fa-chevron-right"></i></button>
-          </div>
-        </div>    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-right: 20px;">
+        <h2>Top Rated</h2>
+        <a href="movie-all.html?category=top_rated" class="view-all-button">View All</a>
+    </div>
+    <div class="row__posters" id="topRated">
+        </div>
+    <div class="arrow-buttons">
+        <button class="arrow-button prev"><i class="fas fa-chevron-left"></i></button>
+        <button class="arrow-button next"><i class="fas fa-chevron-right"></i></button>
+    </div>
+	</div>    
 
       <!-- Action Movies -->
       <div class="row">
+	  <div style="display: flex; justify-content: space-between; align-items: center; margin-right: 20px;">
           <h2>Action Movies</h2>
+		  <a href="movie-all.html?category=action" class="view-all-button">View All</a>
+    </div>
           <div class="row__posters" id="actionMovies">
               <!-- Movie posters will be populated here -->
         </div>
@@ -145,7 +152,10 @@
 
       <!-- Comedy Movies -->
       <div class="row">
+	  <div style="display: flex; justify-content: space-between; align-items: center; margin-right: 20px;">
           <h2>Comedy Movies</h2>
+		  <a href="movie-all.html?category=comedy" class="view-all-button">View All</a>
+    </div>
           <div class="row__posters" id="comedyMovies">
               <!-- Movie posters will be populated here -->
           </div>
@@ -157,7 +167,10 @@
 
       <!-- Horror Movies -->
       <div class="row">
+	  <div style="display: flex; justify-content: space-between; align-items: center; margin-right: 20px;">
           <h2>Horror Movies</h2>
+		  <a href="movie-all.html?category=horror" class="view-all-button">View All</a>
+    </div>
           <div class="row__posters" id="horrorMovies">
               <!-- Movie posters will be populated here -->
           </div>
@@ -169,7 +182,10 @@
 
       <!-- Romance Movies -->
       <div class="row">
+	  <div style="display: flex; justify-content: space-between; align-items: center; margin-right: 20px;">
           <h2>Romance Movies</h2>
+		  <a href="movie-all.html?category=romance" class="view-all-button">View All</a>
+    </div>
           <div class="row__posters" id="romanceMovies">
               <!-- Movie posters will be populated here -->
           </div>
@@ -181,7 +197,10 @@
 
       <!-- Documentaries -->
       <div class="row">
+	  <div style="display: flex; justify-content: space-between; align-items: center; margin-right: 20px;">
           <h2>Documentaries</h2>
+		  <a href="movie-all.html?category=documentary" class="view-all-button">View All</a>
+    </div>
           <div class="row__posters" id="documentaries">
               <!-- Movie posters will be populated here -->
           </div>
@@ -192,7 +211,6 @@
         </div>    
 
       <script src="1234/movie.js"></script>
-      <script src="1234/tvshows.js"></script>
 
       <script>
       // Function to close the message and save the state to localStorage
@@ -223,6 +241,31 @@
           }
       }
   </script>
+  
+  <footer style="background-color: #222; color: white; padding: 20px; font-size: 14px;">
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+
+            <div style="max-width: 50%; text-align: left;">
+                <strong>Disclaimer:</strong> This website does not store any files on its server.
+                All content is provided by third-party sources.
+                <a href="https://t.me/watch2mechat" style="color: white; text-decoration: none;" target="_blank">@watch2mesite</a>
+            </div>
+
+            <div style="text-align: right;">
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; gap: 15px; flex-wrap: wrap;">
+                    <li><a href="terms.html" style="color: white; text-decoration: none;">Terms of Service</a></li>
+                    <li><a href="faqs.html" style="color: white; text-decoration: none;">FAQs</a></li>
+                    <li><a href="privacy.html" style="color: white; text-decoration: none;">Privacy Policy</a></li>
+                    <li><a href="contact.html" style="color: white; text-decoration: none;">Contact</a></li>
+                    <li><a href="https://paypal.me/DonateHere09?country.x=US&locale.x=en_US" target="_blank" style="color: yellow; text-decoration: none; font-weight: bold;">☕ Buy Me a Coffee</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="text-align: left; margin-top: 10px; color: red; text-shadow: 0 0 5px red, 0 0 10px red, 0 0 15px red;">
+            &copy; 2025 <strong>www.watch2me.site</strong>
+        </div>
+    </footer>
 
       <script src="https://cdn.jsdelivr.net/npm/disable-devtool"></script>
     <script>
