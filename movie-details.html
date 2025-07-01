@@ -1,130 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
     <meta charset="UTF-8" />
-      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <meta name="apple-mobile-web-app-capable" content="yes">
-      <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-      <link rel="apple-touch-icon" href="img/Favicon.png">
-        <link rel="icon" href="img/Favicon.png" type="image/x-icon">
-      <title>Movie Details</title>
-      <link rel="stylesheet" href="css/style.css" />
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-      <link rel="manifest" href="manifest.json">
-      <link rel="preload" href="css/style.css" as="style">
-      <link rel="preload" href="1234/movie.js" as="app">
-      <link rel="preload" href="1234/tvshows_page.js" as="app">
-    </head>   
-    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="img/Favicon.png">
+    <link rel="icon" href="img/Favicon.png" type="image/x-icon">
+    <title>WATCH2ME Movie Details</title>
+    <!-- Link to your external stylesheet -->
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://db.onlinewebfonts.com/c/25ee966fb81cd61ffdfb393e81c7bf4b?family=Electronica+Display+Outline" rel="stylesheet">
+</head>
 <body>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YZ8V3HXD2E"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <!-- Blurred Background -->
+    <div class="blurred-background" id="blurred-background"></div>
 
-  gtag('config', 'G-YZ8V3HXD2E');
-</script>
-    
-<div id="loading-container" style="display: none;">
-    <div id="loading-spinner">
-      <div class="spinner"></div>
-    </div>
-    <div id="loading-message">
-      <p>Selecting Available Sources...</p>
-    </div>
-    <div id="server-selection-container">
-      <!-- Dynamic server selection will appear here -->
-    </div>
-  </div>  
+    <!-- Close Button -->
+    <button class="close-button" id="close-button">&times;</button>
 
-     <!-- Loading Screen -->
-     <div id="loading-screen" class="loading-screen">
-        <div class="spinner"></div>
-        <p class="loading-text">Loading...</p> <!-- Add this text -->
-    </div>
-
-    <div class="blurred-background"></div> <!-- Background Container -->
-    
-    <div class="movie-details">
-        <!-- Close Button (X) -->
-        <button class="close-button" id="close-button">&times;</button>
-
-        <!-- Poster Container -->
-        <div class="movie-poster-container">
-            <img id="movie-poster" alt="Movie Poster" class="movie-poster" src="images/https:-watch2day.site">
-            <!-- Button Container -->
-            <div class="button-container">
-                <button id="watch-now-btn" class="watch-now-btn">Watch Now</button>
+    <!-- Main Movie Details Container -->
+    <div class="movie-details-container">
+        <!-- Top Section (Poster, Title, Description, Rating, Year, Genres, Watch Now) -->
+        <div class="top-section">
+            <!-- Movie Poster -->
+            <div class="movie-poster-wrapper">
+                <img id="movie-poster" class="movie-poster" src="https://placehold.co/300x450/000000/FFFFFF?text=Loading..." alt="Movie Poster">
             </div>
-<!-- Iframe container (hidden by default) -->
-<div id="iframe-container" style="display:none;">
-    <button id="close-iframe-btn">Close</button>
-    <button id="change-server-btn">Change Server</button>
-        <!-- Dropdown for changing server -->
-        <div id="server-dropdown" class="server-dropdown" style="display:none;">
+
+            <!-- Movie Information Content (Title, Description, Rating, Year, Genres, and Watch Now Button) -->
+            <div class="info-description-watch-container">
+                <h1 id="movie-title">Loading Title...</h1>
+                <p id="movie-description">Loading Description...</p>
+                <!-- Rating and Year Container -->
+                <div class="rating-year-container">
+                    <div class="movie-rating" id="movie-rating">
+                        <!-- Stars will be populated here -->
+                    </div>
+                    <div class="movie-release-date">
+                         <span id="release-date-text">Loading...</span>
+                    </div>
+                </div>
+                <!-- Genres Container (inline with other info) -->
+                <div class="movie-genres-inline" id="movie-genres-inline">
+                    <!-- Genres will be populated here -->
+                </div>
+                <button class="watch-now-btn" id="watch-now-btn">Watch Now</button>
+            </div>
+        </div>
+
+        <!-- Movie Cast Section -->
+        <div class="movie-cast-section">
+            <h3>Cast</h3>
+            <div class="cast-list" id="movie-cast">
+                <!-- Cast members will be populated here -->
+            </div>
+        </div>
+
+        <!-- Similar Movies Section -->
+        <div class="similar-movies-section">
+            <h3>More Like This</h3>
+            <div class="similar-movies-grid" id="similar-movies-container">
+                <!-- Similar movies will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Iframe Container for Watching Movie -->
+    <div id="iframe-container">
+        <div class="iframe-controls">
+            <button id="change-server-btn">Change Server</button>
+            <button id="close-iframe-btn">Close</button>
+        </div>
+        <div class="server-dropdown" id="server-dropdown">
             <ul id="server-list">
                 <!-- Server options will be populated here -->
             </ul>
         </div>
-    <iframe id="movie-iframe" width="100%" height="400" frameborder="0" allowfullscreen></iframe>
-  </div>
-
-        <h1 id="movie-title"></h1>
-        <p id="movie-description"></p>
-
-        <!-- Genre Section -->
-        <div class="movie-genres" id="movie-genres"></div>
-
-        <div class="movie-info">
-            <div class="movie-rating" id="movie-rating"></div>
-            <div class="movie-release-date" id="movie-release-date">
-                <i class="fas fa-calendar-alt"></i> <!-- Calendar Icon -->
-                <span id="release-date-text"></span> <!-- The actual release date -->
-            </div>
-                    </div>
-
-        <div id="movie-release-date-container">
-            <span id="movie-release-date"></span>
-            <!-- Trailer Section -->
-            <div id="movie-trailer-container" style="display: none;">
-                <iframe id="movie-trailer-iframe" width="1000" height="400" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-            </div>
-        </div>        
-
-        <!-- Cast Section -->
-        <div class="movie-cast" id="movie-cast"></div>
+        <iframe id="movie-iframe" src="" frameborder="0" allowfullscreen></iframe>
     </div>
 
-    <div id="more-like-this">
-        <h3>More Like This</h3>
-        <div id="similar-movies-container" class="similar-movies-container">
-            <!-- Similar movies will be added dynamically here -->
-        </div>
-    </div>        
-    
-    <script src="1234/movie.js"></script> <!-- External JS file for movie details -->
-
-          <script src="https://cdn.jsdelivr.net/npm/disable-devtool"></script>
+    <!-- Link to your external JavaScript file -->
+    <script src="1234/movie.js"></script>
     <script>
-        DisableDevtool({
-            // The parameters are the same as in 3.1
-        })
+        // Ensure fetchMovieDetails is called after the DOM is loaded
+        document.addEventListener('DOMContentLoaded', fetchMovieDetails);
     </script>
-
-    <script src="1234/protection.js"></script>
-
-    <script>
-        var message="Not Allowed... THANK YOU!!!";
-        var shouldAlert=1;
-        document.oncontextmenu=function(){
-            if(shouldAlert==1){
-                alert(message);
-            }
-            return false;
-        };
-    </script>
-</div></body>
+</body>
 </html>
