@@ -186,21 +186,34 @@ select option {
     overflow-y: scroll; /* Make options scrollable */
 }
 
+/* Go Back Button Styling */
 .go-back-btn {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: #333;
-    color: white;
-    font-size: 16px;
-    padding: 10px 15px;
+    background-color: #e50914; /* Netflix red */
+    color: #ffffff;
     border: none;
-    border-radius: 5px;
+    padding: 10px 20px;
+    border-radius: 8px;
     cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    width: fit-content;
+    /* Added styles for positioning */
+    position: fixed; /* or 'absolute' if it should scroll with content */
+    top: 20px; /* Distance from the top of the viewport */
+    left: 20px; /* Distance from the left of the viewport */
+    z-index: 1000; /* Ensure it stays on top of other content */
 }
-  
+
 .go-back-btn:hover {
-    background-color: #555;
+    background-color: #ff0b1c; /* Lighter red on hover */
+}
+
+.go-back-btn i {
+    font-size: 18px;
 }
 
 .container {
