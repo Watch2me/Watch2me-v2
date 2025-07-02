@@ -1365,8 +1365,6 @@ h4.top-label { /* Applied a new class to h4 specifically for "TOP" */
     background-color: #b91515;
 }
 
-/* Add to your existing css/style.css file */
-
 .filter-section {
     display: flex;
     justify-content: space-between; /* Pushes content to the left and right */
@@ -1443,8 +1441,6 @@ h4.top-label { /* Applied a new class to h4 specifically for "TOP" */
     margin-top: 20px;
 }
 
-/* Add these new responsive styles to the end of your style.css file */
-
 /* Responsive adjustments for filter section and general layout */
 @media (max-width: 768px) {
     .filter-section {
@@ -1488,16 +1484,18 @@ h4.top-label { /* Applied a new class to h4 specifically for "TOP" */
         margin-top: 10px; /* Adjust spacing */
     }
 
-    /* Adjust grid for movie/TV show items */
+    /* Adjust grid for movie/TV show items for closer posters */
     .grid {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* Smaller min-width for mobile */
-        gap: 15px; /* Reduce gap between items */
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); /* Adjusted min-width for mobile */
+        gap: 10px; /* Reduced gap between items for closer posters */
+        justify-items: center; /* Center items within their grid cells */
     }
 
     /* Further adjustments for movie/TV card size on mobile */
     .movie-card {
-        width: 150px; /* Smaller width for movie cards */
-        height: 225px; /* Adjust height proportionally */
+        width: 130px; /* Smaller width for movie cards to fit better */
+        height: 195px; /* Adjust height proportionally */
+        margin-right: 0; /* Ensure no extra margin pushes them apart */
     }
 
     .similar-movie-item img,
@@ -1534,13 +1532,15 @@ h4.top-label { /* Applied a new class to h4 specifically for "TOP" */
     }
 
     .grid {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        gap: 10px;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Further reduced min-width */
+        gap: 5px; /* Even smaller gap for very small screens */
+        justify-items: center;
     }
 
     .movie-card {
-        width: 120px;
-        height: 180px;
+        width: 100px; /* Further reduced width */
+        height: 150px; /* Adjust proportionally */
+        margin-right: 0;
     }
 
     .similar-movie-item img,
