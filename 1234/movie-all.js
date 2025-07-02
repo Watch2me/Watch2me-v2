@@ -6,12 +6,12 @@ const apiKey = atob(part1 + part2);
 const baseUrl = 'https://api.themoviedb.org/3';
 
 let currentPage = 1;
-let currentCategory = '';
+let currentCategory = ''; // Stores the initial category from the URL (e.g., 'trending', 'popular')
 let isLoading = false;
 let currentGenre = '';
 let currentSortBy = 'popularity.desc'; // Default sort by popularity descending
 let currentYear = '';
-let is4K = false;
+let is4K = false; // Note: TMDB doesn't have a direct 4K filter, this is illustrative
 
 const genreSelect = document.getElementById('genre-select');
 const sortBySelect = document.getElementById('sort-by-select');
@@ -47,8 +47,9 @@ const populateYears = () => {
     }
 };
 
-const fetchAllMovies = async (category, page, genreId = '', sortBy = '', year = '', _4k = false) => {
-    if (isLoading) return;
+// Main function to fetch movies based on current filters
+const fetchAllMovies = async () => {
+    if (isLoading) return; // Prevent multiple simultaneous fetches
     isLoading = true;
 
     const allMoviesTitle = document.getElementById('all-movies-title');
@@ -59,7 +60,7 @@ const fetchAllMovies = async (category, page, genreId = '', sortBy = '', year = 
     // Show loading spinner
     if (loadingSpinner) loadingSpinner.style.display = 'block';
 
-    if (page === 1) { // Clear existing movies only if it's the first page
+    if (currentPage === 1) { // Clear existing movies only if it's the first page
         if (allMoviesContainer) allMoviesContainer.innerHTML = '';
         if (noMoreMoviesMsg) noMoreMoviesMsg.style.display = 'none';
     }
@@ -68,50 +69,60 @@ const fetchAllMovies = async (category, page, genreId = '', sortBy = '', year = 
         let url = '';
         let titleText = '';
 
-        // Base URL for discovery, which allows for more complex filtering
-        url = `${baseUrl}/discover/movie?api_key=${apiKey}&language=en-US&page=${page}`;
-
-        if (genreId) {
-            url += `&with_genres=${genreId}`;
-            const selectedGenreName = genreSelect.options[genreSelect.selectedIndex].textContent;
-            titleText = `All ${selectedGenreName} Movies`;
+        // Determine the base URL and initial title based on current state
+        if (currentGenre || currentSortBy !== 'popularity.desc' || currentYear || is4K) {
+            // If any filter is active, use the discover endpoint and build URL with filters
+            url = `${baseUrl}/discover/movie?api_key=${apiKey}&language=en-US&page=${currentPage}`;
+            if (currentGenre) {
+                const selectedGenreName = genreSelect.options[genreSelect.selectedIndex].textContent;
+                titleText = `All ${selectedGenreName} Movies`;
+                url += `&with_genres=${currentGenre}`;
+            } else {
+                titleText = 'Explore Filtered Movies';
+            }
+            if (currentSortBy) {
+                url += `&sort_by=${currentSortBy}`;
+            }
+            if (currentYear) {
+                url += `&primary_release_year=${currentYear}`;
+            }
+            // TMDB doesn't have a direct "4K" filter. This is illustrative.
+            // If TMDB had a specific '4k' flag in their API, you would add a parameter here.
         } else {
-            // Original category handling, but now combined with filters
-            switch (category) {
+            // If no filters are active, use the initial category from URL or default
+            switch (currentCategory) {
                 case 'popular':
-                    url += '&sort_by=popularity.desc';
+                    url = `${baseUrl}/discover/movie?api_key=${apiKey}&language=en-US&page=${currentPage}&sort_by=popularity.desc`;
                     titleText = 'All Popular Movies';
                     break;
                 case 'trending':
-                    url = `${baseUrl}/trending/movie/week?api_key=${apiKey}&page=${page}`; // Trending has a specific endpoint
+                    url = `${baseUrl}/trending/movie/week?api_key=${apiKey}&page=${currentPage}`; // Trending has a specific endpoint
                     titleText = 'All Trending Movies';
                     break;
                 case 'top_rated':
-                    url += '&sort_by=vote_average.desc';
+                    url = `${baseUrl}/discover/movie?api_key=${apiKey}&language=en-US&page=${currentPage}&sort_by=vote_average.desc`;
                     titleText = 'All Top Rated Movies';
                     break;
                 default:
-                    // If no specific category from URL, default to popular or general explore
-                    url += '&sort_by=popularity.desc';
+                    // Default to popular if no category and no filters
+                    url = `${baseUrl}/discover/movie?api_key=${apiKey}&language=en-US&page=${currentPage}&sort_by=popularity.desc`;
                     titleText = 'Explore All Movies';
                     break;
             }
         }
 
-        if (sortBy) {
-            url += `&sort_by=${sortBy}`;
-        }
-        if (year) {
-            url += `&primary_release_year=${year}`;
-        }
-        // TMDB doesn't have a direct "4K" filter. You'd typically filter by resolution in your player.
-        // For demonstration, we'll just acknowledge it's checked.
-        // If TMDB had a specific '4k' flag in their API, you would add a parameter here.
-
         if (allMoviesTitle) allMoviesTitle.textContent = titleText;
 
         const response = await fetch(url);
         const data = await response.json();
+
+        // Check if there are more pages available
+        if (data.total_pages && currentPage >= data.total_pages) {
+            if (noMoreMoviesMsg) noMoreMoviesMsg.style.display = 'block';
+            window.removeEventListener('scroll', handleScroll); // Remove scroll listener if no more pages
+        } else {
+            if (noMoreMoviesMsg) noMoreMoviesMsg.style.display = 'none';
+        }
 
         if (data.results && data.results.length > 0) {
             data.results.forEach(movie => {
@@ -151,10 +162,6 @@ const fetchAllMovies = async (category, page, genreId = '', sortBy = '', year = 
                 overlay.appendChild(overlayTitle);
                 overlay.appendChild(overlayMeta);
 
-                // No "Add to List" icon for movie-all page typically, but if you want it:
-                // If you want the add-to-list icon here, you'd add similar logic as in movie.js
-                // and then append it to movieItem.
-
                 movieItem.appendChild(moviePoster);
                 movieItem.appendChild(overlay); // Add the overlay here
 
@@ -164,8 +171,8 @@ const fetchAllMovies = async (category, page, genreId = '', sortBy = '', year = 
 
                 if (allMoviesContainer) allMoviesContainer.appendChild(movieItem);
             });
-            if (noMoreMoviesMsg) noMoreMoviesMsg.style.display = 'none';
-        } else {
+            // noMoreMoviesMsg visibility is now handled by the total_pages check
+        } else if (currentPage === 1) { // Only show "No Movies" if no results on the first page
             if (noMoreMoviesMsg) noMoreMoviesMsg.style.display = 'block';
         }
 
@@ -178,12 +185,15 @@ const fetchAllMovies = async (category, page, genreId = '', sortBy = '', year = 
     }
 };
 
-// Function to handle infinite scrolling (modified to use current filters)
+// Function to handle infinite scrolling
 const handleScroll = () => {
+    // A slightly larger buffer for mobile might help
+    const buffer = 200; // Load when user is within 200px of the bottom
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-    if (scrollTop + clientHeight >= scrollHeight - 50 && !isLoading) {
+
+    if (scrollTop + clientHeight >= scrollHeight - buffer && !isLoading) {
         currentPage++;
-        fetchAllMovies(currentCategory, currentPage, currentGenre, currentSortBy, currentYear, is4K);
+        fetchAllMovies(); // Call without parameters, as it uses global state
     }
 };
 
@@ -192,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
     currentCategory = urlParams.get('category'); // Get category from URL
 
     // Initial fetch based on URL category or default
-    fetchAllMovies(currentCategory, currentPage, currentGenre, currentSortBy, currentYear, is4K);
+    fetchAllMovies(); // Initial call, will use currentPage = 1 and category/defaults
 
     // Populate genres and years
     fetchGenres();
@@ -203,7 +213,8 @@ document.addEventListener('DOMContentLoaded', () => {
         genreSelect.addEventListener('change', () => {
             currentGenre = genreSelect.value;
             currentPage = 1; // Reset page on filter change
-            fetchAllMovies(currentCategory, currentPage, currentGenre, currentSortBy, currentYear, is4K);
+            fetchAllMovies(); // Re-fetch with new filter
+            window.addEventListener('scroll', handleScroll); // Re-attach scroll listener to ensure it's active
         });
     }
 
@@ -211,7 +222,8 @@ document.addEventListener('DOMContentLoaded', () => {
         sortBySelect.addEventListener('change', () => {
             currentSortBy = sortBySelect.value;
             currentPage = 1; // Reset page on filter change
-            fetchAllMovies(currentCategory, currentPage, currentGenre, currentSortBy, currentYear, is4K);
+            fetchAllMovies(); // Re-fetch with new filter
+            window.addEventListener('scroll', handleScroll); // Re-attach scroll listener
         });
     }
 
@@ -219,7 +231,8 @@ document.addEventListener('DOMContentLoaded', () => {
         yearSelect.addEventListener('change', () => {
             currentYear = yearSelect.value;
             currentPage = 1; // Reset page on filter change
-            fetchAllMovies(currentCategory, currentPage, currentGenre, currentSortBy, currentYear, is4K);
+            fetchAllMovies(); // Re-fetch with new filter
+            window.addEventListener('scroll', handleScroll); // Re-attach scroll listener
         });
     }
 
@@ -227,10 +240,10 @@ document.addEventListener('DOMContentLoaded', () => {
         _4kCheckbox.addEventListener('change', () => {
             is4K = _4kCheckbox.checked;
             currentPage = 1; // Reset page on filter change
-            // Note: TMDB doesn't have a direct '4K' filter. This checkbox is illustrative.
-            fetchAllMovies(currentCategory, currentPage, currentGenre, currentSortBy, currentYear, is4K);
+            fetchAllMovies(); // Re-fetch with new filter
+            window.addEventListener('scroll', handleScroll); // Re-attach scroll listener
         });
     }
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll); // Initial attachment of scroll listener
 });
