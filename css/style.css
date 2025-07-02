@@ -1183,7 +1183,7 @@ h4.top-label {
     letter-spacing: 0.5px;
     word-spacing: 0.5px;
     text-align: left; /* Left on mobile for better stacking */
-    width: 100%; /* Take full width on mobile */
+    width: 50%; /* Take full width on mobile */
   }
 }
 
