@@ -6,17 +6,15 @@ const apiKey = atob(part1 + part2);
 const baseUrl = 'https://api.themoviedb.org/3';
 
 let currentPage = 1;
-let currentCategory = '';
+let currentCategory = ''; // Stores the initial category from the URL (e.g., 'trending', 'popular')
 let isLoading = false;
 let currentGenre = '';
-let currentSortBy = 'popularity.desc'; // Default sort by popularity descending for TV shows
+let currentSortBy = 'popularity.desc'; // Default sort for TV shows
 let currentYear = '';
-// let is4K = false; // Uncomment if you add a 4K checkbox for TV shows
 
 const genreSelect = document.getElementById('genre-select');
 const sortBySelect = document.getElementById('sort-by-select');
 const yearSelect = document.getElementById('year-select');
-// const _4kCheckbox = document.getElementById('4k-checkbox'); // Uncomment if you add a 4K checkbox
 
 // Function to fetch TV show genres and populate the dropdown
 const fetchTVShowGenres = async () => {
@@ -47,7 +45,8 @@ const populateYears = () => {
     }
 };
 
-const fetchAllTVShows = async (category, page, genreId = '', sortBy = '', year = '') => { // Removed _4k parameter for now
+// Main function to fetch TV shows based on current filters
+const fetchAllTVShows = async () => {
     if (isLoading) return; // Prevent multiple simultaneous fetches
     isLoading = true;
 
@@ -59,7 +58,7 @@ const fetchAllTVShows = async (category, page, genreId = '', sortBy = '', year =
     // Show loading spinner
     if (loadingSpinner) loadingSpinner.style.display = 'block';
 
-    if (page === 1) { // Clear existing TV shows only if it's the first page
+    if (currentPage === 1) { // Clear existing TV shows only if it's the first page
         if (allTVShowsContainer) allTVShowsContainer.innerHTML = '';
         if (noMoreTVShowsMsg) noMoreTVShowsMsg.style.display = 'none';
     }
@@ -68,48 +67,59 @@ const fetchAllTVShows = async (category, page, genreId = '', sortBy = '', year =
         let url = '';
         let titleText = '';
 
-        // Base URL for TV show discovery, which allows for more complex filtering
-        url = `${baseUrl}/discover/tv?api_key=${apiKey}&language=en-US&page=${page}`;
-
-        if (genreId) {
-            url += `&with_genres=${genreId}`;
-            const selectedGenreName = genreSelect.options[genreSelect.selectedIndex].textContent;
-            titleText = `All ${selectedGenreName} TV Shows`;
+        // Determine the base URL and initial title based on current state
+        if (currentGenre || currentSortBy !== 'popularity.desc' || currentYear) {
+            // If any filter is active, use the discover endpoint and build URL with filters
+            url = `${baseUrl}/discover/tv?api_key=${apiKey}&language=en-US&page=${currentPage}`;
+            if (currentGenre) {
+                const selectedGenreName = genreSelect.options[genreSelect.selectedIndex].textContent;
+                titleText = `All ${selectedGenreName} TV Shows`;
+                url += `&with_genres=${currentGenre}`;
+            } else {
+                titleText = 'Explore Filtered TV Shows';
+            }
+            if (currentSortBy) {
+                url += `&sort_by=${currentSortBy}`;
+            }
+            if (currentYear) {
+                url += `&first_air_date_year=${currentYear}`;
+            }
         } else {
-            // Original category handling, but now combined with filters
-            switch (category) {
+            // If no filters are active, use the initial category from URL or default
+            switch (currentCategory) {
                 case 'popular':
-                    url += '&sort_by=popularity.desc';
+                    url = `${baseUrl}/discover/tv?api_key=${apiKey}&language=en-US&page=${currentPage}&sort_by=popularity.desc`;
                     titleText = 'All Popular TV Shows';
                     break;
                 case 'trending':
-                    url = `${baseUrl}/trending/tv/week?api_key=${apiKey}&page=${page}`; // Trending has a specific endpoint
+                    url = `${baseUrl}/trending/tv/week?api_key=${apiKey}&page=${currentPage}`; // Trending has a specific endpoint
                     titleText = 'All Trending TV Shows';
                     break;
                 case 'top_rated':
-                    url += '&sort_by=vote_average.desc';
+                    url = `${baseUrl}/discover/tv?api_key=${apiKey}&language=en-US&page=${currentPage}&sort_by=vote_average.desc`;
                     titleText = 'All Top Rated TV Shows';
                     break;
                 default:
-                    // If no specific category from URL, default to popular or general explore
-                    url += '&sort_by=popularity.desc';
+                    // Default to popular if no category and no filters
+                    url = `${baseUrl}/discover/tv?api_key=${apiKey}&language=en-US&page=${currentPage}&sort_by=popularity.desc`;
                     titleText = 'Explore All TV Shows';
                     break;
             }
         }
 
-        if (sortBy) {
-            url += `&sort_by=${sortBy}`;
-        }
-        if (year) {
-            url += `&first_air_date_year=${year}`;
-        }
-        // If you add a 4K filter, you would add logic here. TMDB does not have a direct '4K' filter for TV shows either.
-
         if (allTVShowsTitle) allTVShowsTitle.textContent = titleText;
 
         const response = await fetch(url);
         const data = await response.json();
+
+        // Check if there are more pages available
+        if (data.total_pages && currentPage >= data.total_pages) {
+            if (noMoreTVShowsMsg) noMoreTVShowsMsg.style.display = 'block';
+            window.removeEventListener('scroll', handleScroll); // Remove scroll listener if no more pages
+        } else {
+             if (noMoreTVShowsMsg) noMoreTVShowsMsg.style.display = 'none';
+        }
+
 
         if (data.results && data.results.length > 0) {
             data.results.forEach(tvShow => {
@@ -158,8 +168,8 @@ const fetchAllTVShows = async (category, page, genreId = '', sortBy = '', year =
 
                 if (allTVShowsContainer) allTVShowsContainer.appendChild(tvShowItem);
             });
-            if (noMoreTVShowsMsg) noMoreTVShowsMsg.style.display = 'none';
-        } else {
+            // noMoreTVShowsMsg visibility is now handled by the total_pages check
+        } else if (currentPage === 1) { // Only show "No TV shows" if no results on the first page
             if (noMoreTVShowsMsg) noMoreTVShowsMsg.style.display = 'block';
         }
 
@@ -172,12 +182,15 @@ const fetchAllTVShows = async (category, page, genreId = '', sortBy = '', year =
     }
 };
 
-// Function to handle infinite scrolling (modified to use current filters)
+// Function to handle infinite scrolling
 const handleScroll = () => {
+    // A slightly larger buffer for mobile might help
+    const buffer = 200; // Load when user is within 200px of the bottom
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-    if (scrollTop + clientHeight >= scrollHeight - 50 && !isLoading) { // -50 for a little buffer
+
+    if (scrollTop + clientHeight >= scrollHeight - buffer && !isLoading) {
         currentPage++;
-        fetchAllTVShows(currentCategory, currentPage, currentGenre, currentSortBy, currentYear); // Removed _4k parameter
+        fetchAllTVShows(); // Call without parameters, as it uses global state
     }
 };
 
@@ -186,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
     currentCategory = urlParams.get('category'); // Get category from URL
 
     // Initial fetch based on URL category or default
-    fetchAllTVShows(currentCategory, currentPage, currentGenre, currentSortBy, currentYear);
+    fetchAllTVShows(); // Initial call, will use currentPage = 1 and category/defaults
 
     // Populate genres and years
     fetchTVShowGenres();
@@ -197,7 +210,8 @@ document.addEventListener('DOMContentLoaded', () => {
         genreSelect.addEventListener('change', () => {
             currentGenre = genreSelect.value;
             currentPage = 1; // Reset page on filter change
-            fetchAllTVShows(currentCategory, currentPage, currentGenre, currentSortBy, currentYear);
+            fetchAllTVShows(); // Re-fetch with new filter
+            window.addEventListener('scroll', handleScroll); // Re-attach scroll listener to ensure it's active
         });
     }
 
@@ -205,7 +219,8 @@ document.addEventListener('DOMContentLoaded', () => {
         sortBySelect.addEventListener('change', () => {
             currentSortBy = sortBySelect.value;
             currentPage = 1; // Reset page on filter change
-            fetchAllTVShows(currentCategory, currentPage, currentGenre, currentSortBy, currentYear);
+            fetchAllTVShows(); // Re-fetch with new filter
+            window.addEventListener('scroll', handleScroll); // Re-attach scroll listener
         });
     }
 
@@ -213,18 +228,10 @@ document.addEventListener('DOMContentLoaded', () => {
         yearSelect.addEventListener('change', () => {
             currentYear = yearSelect.value;
             currentPage = 1; // Reset page on filter change
-            fetchAllTVShows(currentCategory, currentPage, currentGenre, currentSortBy, currentYear);
+            fetchAllTVShows(); // Re-fetch with new filter
+            window.addEventListener('scroll', handleScroll); // Re-attach scroll listener
         });
     }
 
-    // Uncomment if you add a 4K checkbox for TV shows
-    // if (_4kCheckbox) {
-    //     _4kCheckbox.addEventListener('change', () => {
-    //         is4K = _4kCheckbox.checked;
-    //         currentPage = 1; // Reset page on filter change
-    //         fetchAllTVShows(currentCategory, currentPage, currentGenre, currentSortBy, currentYear, is4K);
-    //     });
-    // }
-
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll); // Initial attachment of scroll listener
 });
