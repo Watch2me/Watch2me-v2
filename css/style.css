@@ -1,7 +1,7 @@
 /* Universal Box-Sizing and Margin Reset */
 * {
   margin: 0;
-  padding: 0; /* Added padding reset here */
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -9,8 +9,8 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
   background-color: #111;
-  color: white; /* Unified color for body text */
-  overflow-x: hidden; /* Prevent horizontal scroll, previously 'overflow: hidden;' on body which hid vertical scroll too */
+  color: white;
+  overflow-x: hidden;
 }
 
 /* Hide scrollbar for Webkit browsers (Chrome, Safari) */
@@ -21,23 +21,23 @@ body::-webkit-scrollbar {
 /* Smooth scroll behavior for HTML */
 html {
   scroll-behavior: smooth;
-  overflow-y: scroll; /* Ensures vertical scroll functionality even if scrollbar is hidden */
+  overflow-y: scroll;
 }
 
 /* Row (Movie/TV Show Rows on Homepage) */
 .row {
   color: white;
   margin-left: 20px;
-  position: relative; /* Needed for arrow button positioning */
-  margin-bottom: 20px; /* Space between rows */
+  position: relative;
+  margin-bottom: 20px;
 }
 
 /* Row Posters Container */
 .row__posters {
   display: flex;
-  overflow-x: scroll; /* Enable horizontal scrolling */
+  overflow-x: scroll;
   padding: 20px;
-  position: relative; /* For positioning arrow buttons */
+  position: relative;
 }
 
 /* Hide scrollbar for row posters */
@@ -47,52 +47,45 @@ html {
 
 /* NEW/MODIFIED: Movie Card Container (This now defines the size of each poster slot) */
 .movie-card {
-  position: relative; /* Essential for absolute positioning of the overlay */
-  width: 200px; /* Set a fixed width for each movie card */
-  flex-shrink: 0; /* Prevent items from shrinking */
-  height: 300px; /* Set a fixed height for consistency. Adjust as needed. */
-  margin-right: 10px; /* Space between cards */
-  border-radius: 10px; /* Match poster border-radius */
-  overflow: hidden; /* Important to clip content when scaled or for rounded corners */
-  cursor: pointer; /* Indicate it's clickable */
-  transition: transform 450ms ease; /* Smooth transform for hover effect */
+  position: relative;
+  width: 200px;
+  flex-shrink: 0;
+  height: 300px;
+  margin-right: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 450ms ease;
 }
 
 .movie-card:hover {
-  transform: scale(1.08); /* Apply scale to the entire card on hover */
+  transform: scale(1.08);
 }
 
 /* MODIFIED: Individual Movie/TV Show Poster (should fill its parent .movie-card) */
 .row__poster {
-  width: 100%; /* Make the image fill its parent (.movie-card) */
-  height: 100%; /* Make the image fill its parent (.movie-card) */
-  object-fit: cover; /* Ensures the image covers the area without distortion */
-  border-radius: 10px; /* Rounded corners for posters */
-  transition: transform 450ms ease; /* Keep transition for smoother internal effects if any, though main one is on .movie-card */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 450ms ease;
 }
 
 /* NEW: Reset poster transform on card hover if the main scale is on .movie-card */
 .movie-card:hover .row__poster {
-  transform: scale(1); /* Ensure poster within the scaled card doesn't also scale */
+  transform: scale(1);
 }
 
 
 /* Large Posters (e.g., for Netflix Originals row) - Keep if used for different size cards */
 .row__posterLarge {
-  /* If you want different sized cards for "Netflix Originals", you would apply this
-     class to the .movie-card itself, and then adjust its width/height.
-     For now, this remains if it's applied directly to the img for specific cases,
-     but the primary sizing is now on .movie-card. */
-  max-height: 250px; /* This sets a maximum height for the image */
-  width: auto; /* Allow width to scale with height for aspect ratio */
+  max-height: 250px;
+  width: auto;
 }
 
 /* If .row__posterLarge is applied directly to the img, keep its specific hover */
 .row__posterLarge:hover {
-  /* This hover will conflict if .movie-card also has a hover.
-     Consider applying row__posterLarge to the .movie-card itself
-     and then having specific scaling for .movie-card.row__posterLarge */
-  transform: scale(1.09); /* Specific larger scale for large posters */
+  transform: scale(1.09);
 }
 
 
@@ -103,16 +96,16 @@ html {
   color: white;
   object-fit: contain;
   height: 500px;
-  position: relative; /* Ensure banner is a positioning context for trailer */
-  overflow: hidden; /* Hide any overflow from the trailer */
+  position: relative;
+  overflow: hidden;
 }
 
 .banner__contents {
   margin-left: 30px;
   padding-top: 140px;
   height: 190px;
-  position: relative; /* Ensure banner contents are positioned */
-  z-index: 2; /* Make sure contents are above trailer initially */
+  position: relative;
+  z-index: 2;
 }
 
 .banner__title {
@@ -138,7 +131,7 @@ html {
 
   .banner__description {
     width: 90%;
-    font-size: 0.8rem; /* Kept original size for mobile as it was already .8rem */
+    font-size: 0.8rem;
     max-width: none;
     height: auto;
     padding-top: 1.5rem;
@@ -152,7 +145,7 @@ html {
 
   .banner__description {
     width: 100%;
-    font-size: 0.8rem; /* Kept original size for very small screens */
+    font-size: 0.8rem;
     height: auto;
     padding-top: 1.5rem;
   }
@@ -182,13 +175,13 @@ html {
 
 /* Banner Fade Effect */
 .banner--fadeBottom {
-  position: absolute; /* Changed from margin-top to absolute positioning */
+  position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 7.4rem; /* Adjusted height from 193px to relative unit */
+  height: 7.4rem;
   background-image: linear-gradient(180deg, transparent, rgba(37, 37, 37, 0.61), #111);
-  z-index: 3; /* Keep fade on top of trailer but behind content if content goes low */
+  z-index: 3;
 }
 
 /* Row Arrow Buttons (Prev/Next) */
@@ -203,13 +196,13 @@ html {
 }
 
 .arrow-button {
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for visibility */
+  background-color: rgba(0, 0, 0, 0.5);
   border: none;
   color: white;
   padding: 10px;
   cursor: pointer;
-  font-size: 2rem; /* Adjusted font size for better arrow visibility */
-  border-radius: 50%; /* Circular buttons */
+  font-size: 2rem;
+  border-radius: 50%;
 }
 
 .arrow-button.prev {
@@ -221,12 +214,12 @@ html {
 }
 
 .arrow-button:hover {
-  background-color: rgba(0, 0, 0, 0.7); /* Darken on hover */
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 .arrow-button i {
-  pointer-events: none; /* Ensures the icon does not interfere with button click */
-  font-size: 1.5rem; /* Set the size of the icon within the button */
+  pointer-events: none;
+  font-size: 1.5rem;
 }
 
 /* Top Right Icons Container */
@@ -283,16 +276,16 @@ html {
   object-fit: contain;
 }
 
-/* Search Container and Bar */
-.search-container {
+/* Search Container and Bar (existing from your file, adjusted for new placement) */
+.search-container { /* This might be redundant if using .search-container-top-right, but keeping it in case it's used elsewhere. */
   display: flex;
   justify-content: center;
-  margin-top: 20px; /* Space from the top */
+  margin-top: 20px;
   margin-bottom: 20px;
   padding: 0 20px;
 }
 
-#search-bar {
+#search-bar { /* This might be redundant if using #search-input. Adjust as needed. */
   width: 100%;
   max-width: 400px;
   padding: 10px;
@@ -405,31 +398,24 @@ html {
   font-family: 'Arial', sans-serif;
 }
 
-/* Removed the conflicting .movie-card-container if it's redundant */
-/* .movie-card-container {
-  position: relative;
-  display: inline-block;
-  margin: 10px;
-} */
-
 /* Add to List Icon */
 .add-to-list-icon {
   position: absolute;
   top: 15px;
-  right: 15px; /* Adjusted to be within the card */
+  right: 15px;
   font-size: 15px;
   color: white;
   background-color: rgba(179, 179, 179, 0.411);
   border: none;
-  padding: 8px; /* Slightly reduced padding */
+  padding: 8px;
   border-radius: 50%;
   cursor: pointer;
   transition: background-color 0.3s, filter 0.3s;
-  z-index: 2; /* Ensure it's above the overlay */
+  z-index: 2;
 }
 
 .add-to-list-icon:hover {
-  background-color: rgba(87, 84, 84, 0.6); /* Make it more visible on hover */
+  background-color: rgba(87, 84, 84, 0.6);
 }
 
 .add-to-list-icon i {
@@ -445,7 +431,7 @@ h3 {
   font-weight: bold;
   margin-bottom: 10px;
   color: #fff;
-  text-align: center; /* Centered by default for sections */
+  text-align: center;
 }
 
 /* List Icon (potentially for watchlist/favorites) - if this is different from add-to-list-icon */
@@ -526,7 +512,7 @@ h3 {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border: none; /* Ensure no borders on iframe */
+  border: none;
 }
 
 /* Watch Trailer section (on details page) */
@@ -653,7 +639,7 @@ h3 {
     padding: 20px;
     border-radius: 8px;
     text-align: justify;
-    color: #eee; /* Ensures consistent text color */
+    color: #eee;
 }
 
 /* Rating and Year/First Air Date container */
@@ -1096,7 +1082,7 @@ h3 {
 }
 
 .recommendation-list li {
-  background-color: transparent; /* Changed from opaque to transparent */
+  background-color: transparent;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.397);
@@ -1108,7 +1094,7 @@ h3 {
   width: 80%;
   margin-left: auto;
   margin-right: auto;
-  color: white; /* Added color for text */
+  color: white;
 }
 
 .recommendation-list img {
@@ -1158,7 +1144,7 @@ h3 {
   line-height: 1;
 }
 
-h4.top-label { /* Applied a new class to h4 specifically for "TOP" */
+h4.top-label {
   font-family: "Electronica Display Outline";
   font-size: 120px;
   color: transparent;
@@ -1168,8 +1154,9 @@ h4.top-label { /* Applied a new class to h4 specifically for "TOP" */
   letter-spacing: 1px;
   word-spacing: 1px;
   line-height: 1.2;
-  text-align: left;
+  text-align: left; /* Always left-aligned */
   animation: fadeInFromRight 2s ease-out;
+  /* Removed any flex-related properties from here as its parent handles it now */
 }
 
 @keyframes fadeInFromRight {
@@ -1195,6 +1182,8 @@ h4.top-label { /* Applied a new class to h4 specifically for "TOP" */
     font-size: 90px;
     letter-spacing: 0.5px;
     word-spacing: 0.5px;
+    text-align: center; /* Center on mobile for better stacking */
+    width: 100%; /* Take full width on mobile */
   }
 }
 
@@ -1229,7 +1218,7 @@ h4.top-label { /* Applied a new class to h4 specifically for "TOP" */
 
 /* Go Back Button Styling */
 .go-back-btn {
-    background-color: #e50914; /* Netflix red */
+    background-color: #e50914;
     color: #ffffff;
     border: none;
     padding: 10px 20px;
@@ -1242,34 +1231,33 @@ h4.top-label { /* Applied a new class to h4 specifically for "TOP" */
     transition: background-color 0.3s ease;
     text-decoration: none;
     width: fit-content;
-    /* Added styles for positioning */
-    position: fixed; /* or 'absolute' if it should scroll with content */
-    top: 20px; /* Distance from the top of the viewport */
-    left: 20px; /* Distance from the left of the viewport */
-    z-index: 1000; /* Ensure it stays on top of other content */
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
 }
 
 .go-back-btn:hover {
-    background-color: #ff0b1c; /* Lighter red on hover */
+    background-color: #ff0b1c;
 }
 
 .go-back-btn i {
     font-size: 18px;
 }
 
-/* Container for general content, previously also defining max-width which is now handled by details containers */
+/* Container for general content */
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
   background-color: transparent;
-  text-align: center; /* Centered text for the general container */
+  /* Removed text-align: center here as it conflicts with flexbox/grid layout */
 }
 
 /* Top Ten Label (for specific content) */
 .top-ten-label {
   position: absolute;
-  top: 80px; /* Unified top position */
+  top: 80px;
   left: 30px;
   background-color: rgb(228, 47, 47);
   color: white;
@@ -1306,27 +1294,27 @@ h4.top-label { /* Applied a new class to h4 specifically for "TOP" */
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   flex-direction: column;
-  justify-content: flex-end; /* Align content to the bottom */
-  align-items: flex-start; /* Align content to the left */
-  opacity: 0; /* Initially hidden */
-  transition: opacity 0.3s ease; /* Smooth fade-in/out */
-  border-radius: 10px; /* Match poster border-radius */
+  justify-content: flex-end;
+  align-items: flex-start;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 10px;
   padding: 10px;
-  box-sizing: border-box; /* Include padding in the width/height */
+  box-sizing: border-box;
 }
 
 .movie-card:hover .poster-overlay {
-  opacity: 1; /* Show on hover */
+  opacity: 1;
 }
 
 /* Play Button Image */
 .play-button-overlay {
-  width: 50px; /* Adjust size as needed */
+  width: 50px;
   height: 50px;
-  margin-bottom: 10px; /* Space between button and text */
+  margin-bottom: 10px;
 }
 
 /* Overlay Text Styling */
@@ -1336,17 +1324,17 @@ h4.top-label { /* Applied a new class to h4 specifically for "TOP" */
   color: white;
   text-align: left;
   margin-bottom: 5px;
-  width: 100%; /* Ensure text takes full width */
-  overflow: hidden; /* Hide overflow text */
-  white-space: nowrap; /* Prevent text wrapping */
-  text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .overlay-meta {
   font-size: 0.9rem;
   color: #ccc;
   text-align: left;
-  width: 100%; /* Ensure text takes full width */
+  width: 100%;
 }
 
 .view-all-button {
@@ -1356,7 +1344,7 @@ h4.top-label { /* Applied a new class to h4 specifically for "TOP" */
     border: none;
     border-radius: 5px;
     font-size: 0.9rem;
-    text-decoration: none; /* Remove underline */
+    text-decoration: none;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
@@ -1365,39 +1353,96 @@ h4.top-label { /* Applied a new class to h4 specifically for "TOP" */
     background-color: #b91515;
 }
 
+/* MODIFIED: Filter Section Layout */
 .filter-section {
-    display: flex;
-    justify-content: space-between; /* Pushes content to the left and right */
-    align-items: center;
+    display: grid; /* Use grid for precise placement */
+    grid-template-columns: 1fr auto; /* Two columns: left for title (auto width), right for search/filters */
+    grid-template-rows: auto auto; /* Two rows: top for title/search, bottom for filters */
+    gap: 20px; /* Space between grid items */
     margin-bottom: 20px;
     padding: 15px 0;
-    border-bottom: 1px solid #333; /* Optional: adds a subtle separator */
+    border-bottom: 1px solid #333;
+    width: 100%;
 }
 
-.explore-movies-title {
-    color: #fff; /* White text for "Explore Movies" */
-    font-size: 1.8em;
-    margin: 0; /* Remove default margin */
+/* Position "Explore Movies" title in the top-left grid cell */
+h4.top-label {
+    grid-column: 1 / 2; /* Spans the first column */
+    grid-row: 1 / 2; /* Stays in the first row */
+    align-self: start; /* Align to the start of the row */
+    justify-self: start; /* Align to the start of the column */
 }
 
-.filter-controls {
-    display: flex;
-    gap: 15px; /* Spacing between filter dropdowns/checkbox */
+/* Position search bar in the top-right grid cell */
+.search-container-top-right {
+    grid-column: 2 / 3; /* Spans the second column */
+    grid-row: 1 / 2; /* Stays in the first row */
+    align-self: center; /* Vertically center in its cell */
+    justify-self: end; /* Align to the end (right) of the column */
+    display: flex; /* Keep flex for its internal elements */
+    gap: 10px;
     align-items: center;
+}
+
+#search-input {
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background-color: #222;
+    color: white;
+    font-size: 1em;
+    width: 200px;
+    transition: border-color 0.3s ease;
+}
+
+#search-input::placeholder {
+    color: #aaa;
+}
+
+#search-input:focus {
+    outline: none;
+    border-color: #e42f2f;
+}
+
+#search-button {
+    background-color: #e42f2f;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+#search-button:hover {
+    background-color: #b91515;
+}
+
+/* Position filters directly below search, aligned to the right */
+.filter-controls {
+    grid-column: 2 / 3; /* Spans the second column */
+    grid-row: 2 / 3; /* Moves to the second row */
+    align-self: start; /* Align to the start of the row */
+    justify-self: end; /* Align to the end (right) of the column */
+    display: flex; /* Keep flex for internal arrangement */
+    flex-wrap: wrap; /* Allow wrapping */
+    gap: 15px;
+    /* Removed width: 100% here as grid handles its width */
 }
 
 .filter-dropdown select {
-    background-color: #222; /* Darker background for dropdowns */
+    background-color: #222;
     color: #fff;
     border: 1px solid #444;
     padding: 8px 12px;
     border-radius: 5px;
     font-size: 1em;
     cursor: pointer;
-    appearance: none; /* Remove default select arrow */
+    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M287%20163.6c-4.5%204.5-10.6%207-17%207H22.4c-6.4%200-12.5-2.5-17-7s-7-10.6-7-17%207-17%2017-17h247.6c6.4%200%2012.5%202.5%2017%207s7%2010.6%207%2017%20-2.5%2012.5-7%2017z%22%2F%3E%3C%2Fsvg%3E'); /* Custom arrow for dropdown */
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M287%20163.6c-4.5%204.5-10.6%207-17%207H22.4c-6.4%200-12.5-2.5-17-7s-7-10.6-7-17%207-17%2017-17h247.6c6.4%200%2012.5%202.5%2017%207s7%2010.6%207%2017%20-2.5%2012.5-7%2017z%22%2F%3E%3C%2Fsvg%3E');
     background-repeat: no-repeat;
     background-position: right 10px top 50%;
     background-size: 12px auto;
@@ -1405,7 +1450,7 @@ h4.top-label { /* Applied a new class to h4 specifically for "TOP" */
 
 .filter-dropdown select:focus {
     outline: none;
-    border-color: #e50914; /* Netflix red on focus */
+    border-color: #e50914;
 }
 
 .filter-checkbox {
@@ -1419,7 +1464,7 @@ h4.top-label { /* Applied a new class to h4 specifically for "TOP" */
     width: 20px;
     height: 20px;
     margin-right: 5px;
-    accent-color: #e50914; /* Netflix red for checkbox */
+    accent-color: #e50914;
     cursor: pointer;
 }
 
@@ -1439,71 +1484,90 @@ h4.top-label { /* Applied a new class to h4 specifically for "TOP" */
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 20px;
     margin-top: 20px;
+    justify-items: center;
 }
 
 /* Responsive adjustments for filter section and general layout */
 @media (max-width: 768px) {
     .filter-section {
-        flex-direction: column; /* Stack items vertically on smaller screens */
-        align-items: flex-start; /* Align items to the start */
-        padding: 10px; /* Adjust padding for mobile */
+        grid-template-columns: 1fr; /* Single column on mobile */
+        grid-template-rows: auto auto auto; /* Three rows for title, search, filters */
+        gap: 15px; /* Adjust gap for mobile */
+        align-items: center; /* Center everything on mobile horizontally */
+        padding: 10px;
+    }
+
+    h4.top-label {
+        grid-column: 1 / 2; /* Full width */
+        grid-row: 1 / 2; /* First row */
+        justify-self: center; /* Center horizontally */
+        text-align: center; /* Center text */
+        font-size: 90px; /* Adjust size for mobile */
+        width: 100%; /* Ensure it takes full width */
+    }
+
+    .search-container-top-right {
+        grid-column: 1 / 2; /* Full width */
+        grid-row: 2 / 3; /* Second row */
+        justify-self: center; /* Center horizontally */
+        justify-content: center; /* Center search input and button */
+        width: 100%; /* Take full width */
+    }
+
+    #search-input {
+        width: 80%; /* Adjust width for mobile input */
+        max-width: 250px;
     }
 
     .filter-controls {
-        flex-direction: column; /* Stack dropdowns and checkbox vertically */
-        width: 100%; /* Make controls take full width */
-        gap: 10px; /* Adjust spacing */
-        margin-top: 15px; /* Add some space above controls */
+        grid-column: 1 / 2; /* Full width */
+        grid-row: 3 / 4; /* Third row */
+        justify-self: center; /* Center horizontally */
+        flex-direction: column; /* Stack filters vertically */
+        justify-content: center; /* Center stacked filters */
+        align-items: center; /* Center items within column */
+        width: 100%; /* Take full width */
+        gap: 10px;
     }
 
     .filter-dropdown,
     .filter-checkbox {
-        width: 100%; /* Make each filter item take full width */
+        width: 100%; /* Filters take full width for stacking */
+        max-width: 300px; /* Limit max width for readability */
     }
 
     .filter-dropdown select {
-        width: 100%; /* Make select boxes take full width */
-        padding: 10px; /* Increase padding for easier tapping */
-        font-size: 1.1em; /* Slightly larger font for readability */
+        width: 100%;
+        padding: 10px;
+        font-size: 1.1em;
     }
 
     .filter-checkbox {
-        justify-content: flex-start; /* Align checkbox content to the left */
-        font-size: 1.1em; /* Slightly larger font for readability */
-    }
-
-    /* Adjust the "Explore Movies/TV Shows" title for smaller screens */
-    h4.top-label {
-        font-size: 70px; /* Adjust as needed for better fit */
-        text-align: center; /* Center the "TOP" text */
-        width: 100%; /* Ensure it takes full width */
+        justify-content: center; /* Center checkbox on mobile */
+        font-size: 1.1em;
     }
 
     .content-today {
-        font-size: 18px; /* Adjust as needed */
-        margin-top: 10px; /* Adjust spacing */
+        font-size: 18px;
+        margin-top: 10px;
     }
 
-    /* Adjust grid for movie/TV show items for closer posters */
     .grid {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); /* Adjusted min-width for mobile */
-        gap: 10px; /* Reduced gap between items for closer posters */
-        justify-items: center; /* Center items within their grid cells */
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 10px;
     }
 
-    /* Further adjustments for movie/TV card size on mobile */
     .movie-card {
-        width: 130px; /* Smaller width for movie cards to fit better */
-        height: 195px; /* Adjust height proportionally */
-        margin-right: 0; /* Ensure no extra margin pushes them apart */
+        width: 130px;
+        height: 195px;
+        margin-right: 0;
     }
 
     .similar-movie-item img,
     .similar-tv-show-item img {
-        height: 220px; /* Adjust height for similar items on mobile */
+        height: 220px;
     }
 
-    /* Go Back button positioning adjustment for mobile */
     .go-back-btn {
         top: 10px;
         left: 10px;
@@ -1514,6 +1578,10 @@ h4.top-label { /* Applied a new class to h4 specifically for "TOP" */
 
 /* Optional: Further fine-tuning for even smaller screens (e.g., less than 480px) */
 @media (max-width: 480px) {
+    #search-input {
+        width: 70%;
+    }
+
     .filter-dropdown select {
         padding: 8px;
         font-size: 1em;
@@ -1532,14 +1600,13 @@ h4.top-label { /* Applied a new class to h4 specifically for "TOP" */
     }
 
     .grid {
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Further reduced min-width */
-        gap: 5px; /* Even smaller gap for very small screens */
-        justify-items: center;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 5px;
     }
 
     .movie-card {
-        width: 100px; /* Further reduced width */
-        height: 150px; /* Adjust proportionally */
+        width: 100px;
+        height: 150px;
         margin-right: 0;
     }
 
