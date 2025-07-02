@@ -11,10 +11,13 @@ let isLoading = false;
 let currentGenre = '';
 let currentSortBy = 'popularity.desc'; // Default sort for TV shows
 let currentYear = '';
+let currentSearchQuery = ''; // NEW: State for search query
 
 const genreSelect = document.getElementById('genre-select');
 const sortBySelect = document.getElementById('sort-by-select');
 const yearSelect = document.getElementById('year-select');
+const searchInput = document.getElementById('search-input'); // NEW
+const searchButton = document.getElementById('search-button'); // NEW
 
 // Function to fetch TV show genres and populate the dropdown
 const fetchTVShowGenres = async () => {
@@ -45,7 +48,7 @@ const populateYears = () => {
     }
 };
 
-// Main function to fetch TV shows based on current filters
+// Main function to fetch TV shows based on current filters or search
 const fetchAllTVShows = async () => {
     if (isLoading) return; // Prevent multiple simultaneous fetches
     isLoading = true;
@@ -67,45 +70,67 @@ const fetchAllTVShows = async () => {
         let url = '';
         let titleText = '';
 
-        // Determine the base URL and initial title based on current state
-        if (currentGenre || currentSortBy !== 'popularity.desc' || currentYear) {
-            // If any filter is active, use the discover endpoint and build URL with filters
-            url = `${baseUrl}/discover/tv?api_key=${apiKey}&language=en-US&page=${currentPage}`;
-            if (currentGenre) {
-                const selectedGenreName = genreSelect.options[genreSelect.selectedIndex].textContent;
-                titleText = `All ${selectedGenreName} TV Shows`;
-                url += `&with_genres=${currentGenre}`;
+        if (currentSearchQuery) { // NEW: If a search query exists, use the search endpoint
+            url = `${baseUrl}/search/tv?api_key=${apiKey}&language=en-US&query=${encodeURIComponent(currentSearchQuery)}&page=${currentPage}`;
+            titleText = `Search Results for "${currentSearchQuery}"`;
+        } else { // Otherwise, use filters or categories
+            // Determine the base URL and initial title based on current state
+            if (currentGenre || currentSortBy !== 'popularity.desc' || currentYear) {
+                // If any filter is active, use the discover endpoint and build URL with filters
+                url = `${baseUrl}/discover/tv?api_key=${apiKey}&language=en-US&page=${currentPage}`;
+                if (currentGenre) {
+                    const selectedGenreName = genreSelect.options[genreSelect.selectedIndex].textContent;
+                    titleText = `All ${selectedGenreName} TV Shows`;
+                    url += `&with_genres=${currentGenre}`;
+                } else {
+                    titleText = 'Explore Filtered TV Shows';
+                }
+                if (currentSortBy) {
+                    url += `&sort_by=${currentSortBy}`;
+                }
+                if (currentYear) {
+                    url += `&first_air_date_year=${currentYear}`;
+                }
             } else {
-                titleText = 'Explore Filtered TV Shows';
-            }
-            if (currentSortBy) {
-                url += `&sort_by=${currentSortBy}`;
-            }
-            if (currentYear) {
-                url += `&first_air_date_year=${currentYear}`;
-            }
-        } else {
-            // If no filters are active, use the initial category from URL or default
-            switch (currentCategory) {
-                case 'popular':
-                    url = `${baseUrl}/discover/tv?api_key=${apiKey}&language=en-US&page=${currentPage}&sort_by=popularity.desc`;
-                    titleText = 'All Popular TV Shows';
-                    break;
-                case 'trending':
-                    url = `${baseUrl}/trending/tv/week?api_key=${apiKey}&page=${currentPage}`; // Trending has a specific endpoint
-                    titleText = 'All Trending TV Shows';
-                    break;
-                case 'top_rated':
-                    url = `${baseUrl}/discover/tv?api_key=${apiKey}&language=en-US&page=${currentPage}&sort_by=vote_average.desc`;
-                    titleText = 'All Top Rated TV Shows';
-                    break;
-                default:
-                    // Default to popular if no category and no filters
-                    url = `${baseUrl}/discover/tv?api_key=${apiKey}&language=en-US&page=${currentPage}&sort_by=popularity.desc`;
-                    titleText = 'Explore All TV Shows';
-                    break;
+                // If no filters are active, use the initial category from URL or default
+                switch (currentCategory) {
+                    case 'popular':
+                        url = `${baseUrl}/discover/tv?api_key=${apiKey}&language=en-US&page=${currentPage}&sort_by=popularity.desc`;
+                        titleText = 'All Popular TV Shows';
+                        break;
+                    case 'trending':
+                        url = `${baseUrl}/trending/tv/week?api_key=${apiKey}&page=${currentPage}`; // Trending has a specific endpoint
+                        titleText = 'All Trending TV Shows';
+                        break;
+                    case 'top_rated':
+                        url = `${baseUrl}/discover/tv?api_key=${apiKey}&language=en-US&page=${currentPage}&sort_by=vote_average.desc`;
+                        titleText = 'All Top Rated TV Shows';
+                        break;
+					case 'drama':
+						url = `${baseUrl}/discover/tv?api_key=${apiKey}&with_genres=18&page=${currentPage}`;
+						titleText = 'All Drama TV Shows';
+						break;
+					case 'comedy':
+						url = `${baseUrl}/discover/tv?api_key=${apiKey}&with_genres=35&page=${currentPage}`;
+						titleText = 'All Comedy TV Shows';
+						break;
+					case 'romance':
+						url = `${baseUrl}/discover/tv?api_key=${apiKey}&with_genres=10749&page=${currentPage}`;
+						titleText = 'All Romance TV Shows';
+						break;
+					case 'documentary':
+						url = `${baseUrl}/discover/tv?api_key=${apiKey}&with_genres=99&page=${currentPage}`;
+						titleText = 'All Documentary TV Shows';
+						break;
+                    default:
+                        // Default to popular if no category and no filters
+                        url = `${baseUrl}/discover/tv?api_key=${apiKey}&language=en-US&page=${currentPage}&sort_by=popularity.desc`;
+                        titleText = 'Explore All TV Shows';
+                        break;
+                }
             }
         }
+
 
         if (allTVShowsTitle) allTVShowsTitle.textContent = titleText;
 
@@ -118,6 +143,9 @@ const fetchAllTVShows = async () => {
             window.removeEventListener('scroll', handleScroll); // Remove scroll listener if no more pages
         } else {
              if (noMoreTVShowsMsg) noMoreTVShowsMsg.style.display = 'none';
+             // Re-add scroll listener in case it was removed previously and new results arrived
+             window.removeEventListener('scroll', handleScroll); // Remove first to prevent duplicates
+             window.addEventListener('scroll', handleScroll); // Then add
         }
 
 
@@ -163,6 +191,7 @@ const fetchAllTVShows = async () => {
                 tvShowItem.appendChild(overlay); // Add the overlay here
 
                 tvShowItem.addEventListener('click', () => {
+                    // For TV shows, ensure it links to tvshows-details.html
                     window.location.href = `tvshows-details.html?id=${tvShow.id}`;
                 });
 
@@ -194,6 +223,17 @@ const handleScroll = () => {
     }
 };
 
+// NEW: Function to reset filters for TV shows
+const resetFilters = () => {
+    if (genreSelect) genreSelect.value = '';
+    if (sortBySelect) sortBySelect.value = 'popularity.desc'; // Reset to default
+    if (yearSelect) yearSelect.value = '';
+
+    currentGenre = '';
+    currentSortBy = 'popularity.desc';
+    currentYear = '';
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     currentCategory = urlParams.get('category'); // Get category from URL
@@ -205,31 +245,54 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchTVShowGenres();
     populateYears();
 
+    // NEW: Event listener for search button click
+    if (searchButton) {
+        searchButton.addEventListener('click', () => {
+            currentSearchQuery = searchInput.value.trim();
+            currentPage = 1; // Reset page on new search
+            resetFilters(); // Clear filters when search is initiated
+            fetchAllTVShows();
+        });
+    }
+
+    // NEW: Event listener for Enter key in search input
+    if (searchInput) {
+        searchInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                searchButton.click(); // Simulate button click
+            }
+        });
+    }
+
     // Add event listeners for filter changes
+    // NEW: When a filter changes, clear the search query
     if (genreSelect) {
         genreSelect.addEventListener('change', () => {
             currentGenre = genreSelect.value;
+            currentSearchQuery = ''; // Clear search query
+            if (searchInput) searchInput.value = ''; // Clear search input
             currentPage = 1; // Reset page on filter change
-            fetchAllTVShows(); // Re-fetch with new filter
-            window.addEventListener('scroll', handleScroll); // Re-attach scroll listener to ensure it's active
+            fetchAllTVShows();
         });
     }
 
     if (sortBySelect) {
         sortBySelect.addEventListener('change', () => {
             currentSortBy = sortBySelect.value;
+            currentSearchQuery = ''; // Clear search query
+            if (searchInput) searchInput.value = ''; // Clear search input
             currentPage = 1; // Reset page on filter change
-            fetchAllTVShows(); // Re-fetch with new filter
-            window.addEventListener('scroll', handleScroll); // Re-attach scroll listener
+            fetchAllTVShows();
         });
     }
 
     if (yearSelect) {
         yearSelect.addEventListener('change', () => {
             currentYear = yearSelect.value;
+            currentSearchQuery = ''; // Clear search query
+            if (searchInput) searchInput.value = ''; // Clear search input
             currentPage = 1; // Reset page on filter change
-            fetchAllTVShows(); // Re-fetch with new filter
-            window.addEventListener('scroll', handleScroll); // Re-attach scroll listener
+            fetchAllTVShows();
         });
     }
 
