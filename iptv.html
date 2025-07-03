@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="img/Favicon.png">
+	<link rel="icon" href="img/Favicon.png" type="image/x-icon">
+    <title>Watch2Me Live TV</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: #222;
+            border-bottom: 1px solid #333;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            flex-shrink: 0;
+        }
+
+        .logo {
+            height: 40px; /* Adjust as needed */
+        }
+
+        .icons-container {
+            display: flex;
+            gap: 25px;
+        }
+
+        .icon {
+            font-size: 24px;
+            color: #f0f0f0;
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .icon:hover {
+            color: #e50914; /* Red theme color */
+            transform: scale(1.1);
+        }
+
+        .icon a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-grow: 1;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        /* Left Section - Channel List */
+        .left-section {
+            width: 280px; /* Fixed width for the channel list */
+            background-color: #222;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            overflow-y: auto;
+            max-height: calc(100vh - 120px); /* Adjust based on top-bar height */
+        }
+
+        .live-tv-box {
+            background-color: #333;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid #e50914; /* Red border */
+        }
+
+        .live-tv-box .tv-icon {
+            font-size: 40px;
+            color: #e50914; /* Red theme color */
+        }
+
+        .live-tv-box .text-content h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #f0f0f0;
+        }
+
+        .live-tv-box .text-content p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            color: #bbb;
+        }
+
+        .search-bar-container {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .search-bar-container input {
+            width: calc(100% - 40px);
+            padding: 10px 15px;
+            padding-right: 35px; /* Space for search icon */
+            border: 1px solid #555;
+            border-radius: 5px;
+            background-color: #444;
+            color: #f0f0f0;
+            font-size: 16px;
+        }
+
+        .search-bar-container input::placeholder {
+            color: #aaa;
+        }
+
+        .search-bar-container .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            background-color: #444;
+            color: #f0f0f0;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background-color: #e50914; /* Red theme color */
+        }
+
+        .recently-watched-section h3 {
+            font-size: 16px;
+            color: #f0f0f0;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .channel-count {
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #bbb;
+        }
+
+        .channel-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .channel-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .channel-item:hover {
+            background-color: #444;
+        }
+
+        .channel-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: contain; /* Ensures logo fits without distortion */
+            background-color: #f0f0f0; /* Fallback for transparent logos */
+            padding: 3px;
+        }
+
+        /* Right Section - Video Player */
+        .right-section {
+            flex-grow: 1;
+            background-color: #000; /* Black background for video */
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative; /* For background image */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        #background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            filter: blur(10px); /* Blur effect for background */
+            opacity: 0.3; /* Slightly transparent */
+            z-index: 1;
+        }
+
+        #video-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio (height / width * 100%) */
+            max-width: 100%;
+            max-height: 100%;
+            background-color: #000; /* Ensure black background when no image */
+            z-index: 2; /* Above the background blur */
+        }
+
+        #video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+        }
+
+        #current-channel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #f0f0f0;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            z-index: 3;
+        }
+
+        #close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #e50914; /* Red button */
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            z-index: 3;
+        }
+
+        #close-btn:hover {
+            background-color: #ff333a;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .left-section {
+                width: auto;
+                max-height: none;
+            }
+
+            .right-section {
+                height: 50vh; /* Adjust height for smaller screens */
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.0/shaka-player.compiled.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="logo-container">
+            <img id="logo" class="logo" src="img/Logo.png" alt="Logo">
+        </div>
+
+        <div class="icons-container">
+            <div class="icon" onclick="openSearchPage()">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="icon">
+                <a href="movies.html">
+                    <i class="fas fa-film"></i>
+                </a>
+            </div>
+            <div class="icon">
+                <a href="tvshows.html">
+                    <i class="fas fa-tv"></i>
+                </a>
+            </div>
+            <div class="icon">
+                <a href="sorting.html">
+                    <i class="fa fa-sort"></i>
+                </a>
+            </div>
+            <div class="icon">
+                <a href="https://t.me/watch2mechat" target="_blank">
+                    <i class="fab fa-telegram-plane"></i>
+                </a>
+            </div>
+            <div class="icon">
+                <a href="add-to-list.html">
+                    <i class="fa fa-list-alt"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="left-section">
+            <div class="live-tv-box">
+                <i class="fas fa-broadcast-tower tv-icon"></i> <div class="text-content">
+                    <h2>Live TV</h2>
+                    <p>Stream your favorite channels live</p>
+                </div>
+            </div>
+
+            <div class="search-bar-container">
+                <input type="text" id="channel-search" placeholder="Search channels...">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">All Channels</button>
+                <button class="filter-btn" data-filter="recently-watched">Recently Watched</button>
+            </div>
+
+            <div class="channel-count">
+                Showing <span id="current-channel-count">0</span> of <span id="total-channel-count">0</span> channels
+            </div>
+
+            <div class="channel-list" id="channel-list">
+                </div>
+        </div>
+
+        <div class="right-section">
+            <div id="background"></div>
+            <div id="video-container">
+                <video id="video" controls autoplay></video>
+            </div>
+            <div id="current-channel">Current Channel: Loading...</div>
+            <button id="close-btn">Close</button>
+        </div>
+    </div>
+
+    <script src="1234/iptv.js"></script>
+    <script>
+        // Placeholder for openSearchPage function if it's not in iptv.js
+        function openSearchPage() {
+            alert('Search functionality coming soon!');
+            // window.location.href = 'search.html'; // Uncomment and change to your search page
+        }
+
+        const MAX_RECENTLY_WATCHED = 5; // Limit for recently watched channels
+
+        // Function to save channel to recently watched
+        function saveToRecentlyWatched(channel) {
+            let recentlyWatched = JSON.parse(localStorage.getItem('recentlyWatchedChannels')) || [];
+
+            // Remove if already exists to move it to the front
+            recentlyWatched = recentlyWatched.filter(item => item.name !== channel.name);
+
+            // Add the new channel to the front
+            recentlyWatched.unshift({
+                name: channel.name,
+                url: channel.url,
+                keyId: channel.keyId,
+                key: channel.key,
+                type: channel.type,
+                logo: channel.logo
+            });
+
+            // Limit to MAX_RECENTLY_WATCHED
+            if (recentlyWatched.length > MAX_RECENTLY_WATCHED) {
+                recentlyWatched = recentlyWatched.slice(0, MAX_RECENTLY_WATCHED);
+            }
+
+            localStorage.setItem('recentlyWatchedChannels', JSON.stringify(recentlyWatched));
+        }
+
+        // Function to get recently watched channels
+        function getRecentlyWatched() {
+            return JSON.parse(localStorage.getItem('recentlyWatchedChannels')) || [];
+        }
+
+        // Modified initPlayer to also save to recently watched
+        const originalInitPlayer = initPlayer; // Store original initPlayer
+        initPlayer = async function(channel) {
+            await originalInitPlayer(channel); // Call original initPlayer logic
+            saveToRecentlyWatched(channel); // Save the watched channel
+        };
+
+        // Function to render channels based on filter and search
+        function renderChannels(filterType = 'all', searchValue = '') {
+            const channelListDiv = document.getElementById('channel-list');
+            channelListDiv.innerHTML = ''; // Clear existing channels
+            let visibleChannelsCount = 0;
+
+            let channelsToRender = [];
+
+            if (filterType === 'all') {
+                channelsToRender = channels; // 'channels' array from iptv.js
+            } else if (filterType === 'recently-watched') {
+                channelsToRender = getRecentlyWatched();
+                // If there are no recently watched, show a message
+                if (channelsToRender.length === 0) {
+                    channelListDiv.innerHTML = '<p style="text-align: center; color: #aaa; margin-top: 20px;">No recently watched channels.</p>';
+                    document.getElementById('current-channel-count').textContent = 0;
+                    document.getElementById('total-channel-count').textContent = channels.length;
+                    return; // Exit function if no channels to render
+                }
+            }
+
+            const filteredAndSearchedChannels = channelsToRender.filter(channel => {
+                return channel.name.toLowerCase().includes(searchValue.toLowerCase());
+            });
+
+            filteredAndSearchedChannels.forEach((channel) => {
+                const div = document.createElement('div');
+                div.className = 'channel-item';
+                div.innerHTML = `
+                    <img src="${channel.logo}" alt="${channel.name}" class="channel-logo" />
+                    <div>${channel.name}</div>
+                `;
+                div.addEventListener('click', () => {
+                    initPlayer(channel); // This will now call the modified initPlayer
+                });
+                channelListDiv.appendChild(div);
+                visibleChannelsCount++;
+            });
+
+            document.getElementById('current-channel-count').textContent = visibleChannelsCount;
+            document.getElementById('total-channel-count').textContent = channels.length;
+        }
+
+        // Initial render on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderChannels('all'); // Initially show all channels
+            // Ensure the first channel plays on load
+            if (channels.length > 0) {
+                // Since initPlayer is overridden, it will save the first channel watched
+                // This ensures it gets added to recently watched list immediately.
+                initPlayer(channels[0]);
+            }
+        });
+
+        // Search functionality
+        document.getElementById('channel-search').addEventListener('keyup', function() {
+            const currentFilter = document.querySelector('.filter-btn.active').dataset.filter;
+            renderChannels(currentFilter, this.value);
+        });
+
+        // Filter button functionality
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                const filterType = this.dataset.filter;
+                const searchValue = document.getElementById('channel-search').value;
+                renderChannels(filterType, searchValue);
+            });
+        });
+    </script>
+</body>
+</html>
