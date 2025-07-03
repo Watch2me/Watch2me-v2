@@ -76,8 +76,8 @@ const fetchMovies = async (category, rowId) => {
                 overlayMeta.classList.add('overlay-meta');
                 const releaseYear = movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A';
                 const rating = movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A';
-                overlayMeta.innerHTML = `<i class="fas fa-star" style="color: #f7c400;"></i> ${rating} &bull; ${releaseYear}`; // Font Awesome star and bullet point
-                
+                overlayMeta.innerHTML = `<i class="fas fa-star" style="color: #f7c400;"></i> ${rating} • ${releaseYear}`; // Font Awesome star and bullet point
+
                 // Append elements to the overlay
                 overlay.appendChild(playButtonImg);
                 overlay.appendChild(overlayTitle);
@@ -170,12 +170,11 @@ document.addEventListener('DOMContentLoaded', () => {
             movieCard.appendChild(movieTitle);
 
             // Add the movie card to the movie list container
-            movieListContainer.appendChild(movieCard);
-
-            // Add click event to each movie poster to redirect to the movie details page
             movieCard.addEventListener('click', () => {
                 window.location.href = `movie-details.html?movie_id=${movie.id}`;
             });
+
+            movieListContainer.appendChild(movieCard);
         });
     }
 });
@@ -305,40 +304,138 @@ const initArrowNavigation = () => {
     });
 };
 
-// Toggle the search bar visibility when clicking the search icon
-function toggleSearchBar() {
-    const searchBar = document.querySelector('.search-bar');
-    searchBar.classList.toggle('show');
-}
 
-// Close the search bar if clicked outside
-document.addEventListener('click', function(event) {
-    const searchBar = document.querySelector('.search-bar');
-    const searchIcon = document.querySelector('.icon i.fa-search');
-    const iconsContainer = document.querySelector('.icons-container');
+// --- EXPANDING SEARCH ICON LOGIC ---
+document.addEventListener('DOMContentLoaded', () => {
+    const searchIconContainer = document.getElementById('search-icon-container'); // The main div for search icon
+    const expandedSearchInput = document.getElementById('expanded-search-input');
+    const expandedSearchButton = document.getElementById('expanded-search-button');
 
-    // Check if the click was outside the search bar or any of the icons
-    if (searchBar && iconsContainer && !searchBar.contains(event.target) && !iconsContainer.contains(event.target)) {
-        searchBar.classList.remove('show');
+    // Function to show/hide the expanded search bar
+    const toggleExpandedSearchBar = (show) => {
+        if (show) {
+            searchIconContainer.classList.add('expanded');
+            expandedSearchInput.focus(); // Focus the input when expanded
+        } else {
+            searchIconContainer.classList.remove('expanded');
+            expandedSearchInput.value = ''; // Clear input when collapsed
+        }
+    };
+
+    // Function to handle scroll to show/hide expanded search bar
+    const handleScrollForSearch = () => {
+        const scrollThreshold = 100; // Adjust this value as needed
+        if (window.scrollY > scrollThreshold) {
+            // Keep it open if user clicks, otherwise close it when scrolling back up
+            if (!searchIconContainer.classList.contains('expanded')) {
+                toggleExpandedSearchBar(true);
+            }
+        } else {
+            toggleExpandedSearchBar(false);
+        }
+    };
+
+    // Add scroll event listener
+    window.addEventListener('scroll', handleScrollForSearch);
+
+    // Initial check in case the page loads scrolled down
+    handleScrollForSearch();
+
+    // Event listener for clicking the search icon itself to toggle or redirect
+    if (searchIconContainer) {
+        searchIconContainer.addEventListener('click', (event) => {
+            // Check if the search bar is currently expanded
+            const isExpanded = searchIconContainer.classList.contains('expanded');
+
+            // Check if the click was directly on the icon or its immediate container,
+            // not on the input field or button inside the expanded bar.
+            const clickedOnIconOrContainer = event.target.classList.contains('fas') || event.target.id === 'search-icon-container';
+
+            if (clickedOnIconOrContainer) {
+                if (isExpanded) {
+                    // If the search bar is already expanded (due to scroll or previous click),
+                    // then we just toggle it closed. We don't want to redirect here.
+                    toggleExpandedSearchBar(false); // Close the search bar
+                } else {
+                    // If the search bar is NOT expanded (only icon is visible),
+                    // then redirect to search.html when the icon is clicked.
+                    window.location.href = `search.html`;
+                }
+            }
+            // If the click was inside the expanded input/button, let their specific handlers manage it.
+            // No need to stopPropagation here as the handlers for input/button are specifically added later.
+        });
+    }
+
+    // Event listener for the expanded search button
+    if (expandedSearchButton) {
+        expandedSearchButton.addEventListener('click', () => {
+            const query = expandedSearchInput.value.trim();
+            if (query) {
+                window.location.href = `search.html?query=${encodeURIComponent(query)}`;
+            } else {
+                window.location.href = `search.html`; // Go to search page even if empty
+            }
+        });
+    }
+
+    // Handle pressing Enter key in the search input
+    if (expandedSearchInput) {
+        expandedSearchInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                expandedSearchButton.click(); // Simulate a click on the search button
+            }
+        });
+    }
+
+    // Close the search bar if clicked outside (but not on the search icon container itself)
+    document.addEventListener('click', function(event) {
+        if (searchIconContainer &&
+            !searchIconContainer.contains(event.target) && // If click is not inside the search bar container
+            searchIconContainer.classList.contains('expanded')) { // And if it's currently expanded
+            toggleExpandedSearchBar(false);
+        }
+    });
+
+    // Stop propagation for clicks INSIDE the input/button to prevent them from closing the bar
+    if (expandedSearchInput) {
+        expandedSearchInput.addEventListener('click', (event) => {
+            event.stopPropagation();
+        });
+    }
+    if (expandedSearchButton) {
+        expandedSearchButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+        });
     }
 });
 
-function openSearchPage() {
-    // Open a new page
-    window.location.href = 'search.html'; // Replace 'search.html' with the URL of your desired page
-}
+
+// --- END EXPANDING SEARCH ICON LOGIC ---
+
 
 // Array of movie endpoints with custom server names
 const MOVIE_ENDPOINTS = [
-    { url: 'https://player.videasy.net/movie/', name: 'Mythical 4K(Recommended, Auto Switch Server)' },
-    { url: 'https://vidsrc.cc/v2/embed/movie/', name: 'Legend(NOADSFAST)' },
-    { url: 'https://vidlink.pro/movie/', name: 'Warrior' },
-    { url: 'https://api.hexa.watch/movie/', name: 'Epic(No Ads)' },
-    { url: 'https://111movies.com/movie/', name: 'Mythic(Fast)' },
-    { url: 'https://rivestream.live/embed?type=movie&id=', name: 'Grand Master' },
-    { url: 'https://vidsrc.dev/embed/movie/', name: 'Divine' },
-    { url: 'https://vidsrc.io/embed/movie/', name: 'Sniper' },
-    { url: 'https://moviesapi.club/movie/', name: 'KUPAL(Decent)' }
+        { url: 'https://vidsrc.cc/v2/embed/movie/', name: 'Vidsrc.cc (1080p/4K)' },
+        { url: 'https://player.videasy.net/movie/', name: 'VidEasy (1080p/4K)' },
+        { url: 'https://vidsrc.su/embed/movie/', name: 'Vidsrc.su (1080p/4K)' },
+		{ url: 'https://vidlink.pro/movie/', name: 'VidLink Pro (1080p/4K)' },
+        { url: 'https://embed.su/embed/movie/', name: 'Embed.su (1080p)' },
+        { url: 'https://moviesapi.club/movie/', name: 'MoviesAPI Club (Low-Q/1080p)' },
+        { url: 'https://frembed.xyz/api/film.php?id=', name: 'Frembed.live (1080p)' },
+        { url: 'https://vidfast.pro/movie/', name: 'VidFast (1080p)' },
+        { url: 'https://player.autoembed.cc/embed/movie/', name: 'AutoEmbed (1080p)' },
+		{ url: 'https://vidsrc.dev/embed/movie/', name: 'Vidsrc.dev' },
+        { url: 'https://vidsrc.io/embed/movie/', name: 'Vidsrc.io' },
+        { url: 'https://player.vidsrc.co/embed/movie/', name: 'Vidsrc.co' },
+        { url: 'https://vidsrc.icu/embed/movie/', name: 'Vidsrc.icu' },
+        { url: 'https://vidsrc.to/embed/movie/', name: 'Vidsrc.to' },
+        { url: 'https://vidsrc.xyz/embed/movie/', name: 'Vidsrc.xyz' },
+		{ url: 'https://api.hexa.watch/movie/', name: 'Hexa' },
+        { url: 'https://111movies.com/movie/', name: '111movies' },
+        { url: 'https://rivestream.live/embed?type=movie&id=', name: 'riverstream' },
+        { url: 'https://www.2embed.cc/embed/', name: '2emBedcc' },
+        { url: 'https://vidjoy.pro/embed/movie/', name: 'VidJoyPro' }
 ];
 
 // Variable to keep track of the current server index
@@ -479,28 +576,65 @@ const fetchMovieDetails = async () => {
         const serverList = document.getElementById('server-list');
 
         if (changeServerBtn && serverDropdown && serverList) {
+
+            // Function to change the server
+            const changeServer = (index) => {
+                currentServerIndex = index;
+                const iframe = document.getElementById('movie-iframe');
+                const serverListItems = document.querySelectorAll('#server-list li');
+
+                // Alisin ang 'active' class sa lahat ng item
+                serverListItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+
+                // Idagdag ang 'active' class sa piniling item
+                const selectedItem = document.querySelector(`#server-list li[data-index='${index}']`);
+                if (selectedItem) {
+                    selectedItem.classList.add('active');
+                }
+
+                // Palitan ang source ng iframe
+                if (iframe) {
+                    iframe.src = `${MOVIE_ENDPOINTS[currentServerIndex].url}${movieId}`;
+                }
+
+                // INAYOS DITO: Itago ang dropdown gamit ang class para maiwasan ang bug
+                serverDropdown.classList.remove('show');
+                console.log(`Changed to server: ${MOVIE_ENDPOINTS[currentServerIndex].name}`);
+            };
+
             // Populate the server list with custom names
+            serverList.innerHTML = ''; // Linisin muna ang listahan
             MOVIE_ENDPOINTS.forEach((endpoint, index) => {
                 const listItem = document.createElement('li');
-                listItem.textContent = `${endpoint.name}`; // Use custom server name
-                listItem.addEventListener('click', () => changeServer(index));
+                listItem.textContent = endpoint.name;
+                listItem.dataset.index = index;
+
+                if (index === 0) {
+                    listItem.classList.add('active');
+                }
+
+                listItem.addEventListener('click', (event) => {
+                    event.stopPropagation(); // Pigilan ang pag-propagate ng click event
+                    changeServer(index);
+                });
+
                 serverList.appendChild(listItem);
             });
 
-            // Show dropdown when Change Server button is clicked
-            changeServerBtn.addEventListener('click', () => {
-                serverDropdown.style.display = serverDropdown.style.display === 'none' ? 'block' : 'none';
+            // INAYOS DITO: Ito ang tamang paraan para i-toggle ang dropdown
+            changeServerBtn.addEventListener('click', (event) => {
+                event.stopPropagation(); // Pigilan ang click na umabot sa 'window'
+                serverDropdown.classList.toggle('show');
             });
 
-            // Function to change the server
-            function changeServer(index) {
-                currentServerIndex = index;
-                const iframe = document.getElementById('movie-iframe');
-                if (iframe) iframe.src = `${MOVIE_ENDPOINTS[currentServerIndex].url}${movieId}`;
-
-                serverDropdown.style.display = 'none';
-                console.log(`Changed to server: ${MOVIE_ENDPOINTS[currentServerIndex].name}`);
-            }
+            // Idinagdag para isara ang dropdown kapag nag-click sa labas
+            window.addEventListener('click', () => {
+                if(serverDropdown.classList.contains('show')) {
+                    serverDropdown.classList.remove('show');
+                }
+            });
         }
 
         // Add functionality for Close Iframe Button
