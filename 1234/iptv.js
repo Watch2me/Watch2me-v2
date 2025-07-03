@@ -803,5 +803,5 @@ if (channels.length > 0) {
 
 // Close button behavior
 document.getElementById('close-btn').onclick = () => {
-  window.location.href = 'https://watch2me.site';
+  window.location.href = 'https://watch2me-v2.pages.dev/';
 };
