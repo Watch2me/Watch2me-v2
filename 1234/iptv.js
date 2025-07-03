@@ -748,7 +748,7 @@ async function initPlayer(channel) {
       });
     } catch (e) {
       console.error("Shaka Player error:", e);
-      alert("Failed to load channel: " + channel.name);
+      console.error("Failed to load channel: " + channel.name + ". Error details:", e);
     }
 
   } else if (channel.type === 'hls') {
