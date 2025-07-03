@@ -8,25 +8,25 @@ const fetchTVShows = async (category, rowId) => {
     try {
         let url = '';
         switch (category) {
-            case 'popularTV':
+            case 'popular':
                 url = `${baseUrl}/tv/popular?api_key=${apiKey}&language=en-US&page=1`;
                 break;
-            case 'trendingTV':
+            case 'trending':
                 url = `${baseUrl}/trending/tv/week?api_key=${apiKey}&page=1`;
                 break;
-            case 'top_ratedTV':
+            case 'top_rated':
                 url = `${baseUrl}/tv/top_rated?api_key=${apiKey}&language=en-US&page=1`;
                 break;
-            case 'dramaTV':
+            case 'drama':
                 url = `${baseUrl}/discover/tv?api_key=${apiKey}&with_genres=18&page=1`; // Genre ID 18 is Drama
                 break;
-            case 'comedyTV':
+            case 'comedy':
                 url = `${baseUrl}/discover/tv?api_key=${apiKey}&with_genres=35&page=1`; // Genre ID 35 is Comedy
                 break;
-            case 'romanceTV':
+            case 'romance':
                 url = `${baseUrl}/discover/tv?api_key=${apiKey}&with_genres=10749&page=1`; // Genre ID 10749 is Romance
                 break;
-            case 'documentaryTV':
+            case 'documentary':
                 url = `${baseUrl}/discover/tv?api_key=${apiKey}&with_genres=99&page=1`; // Genre ID 99 is Documentary
                 break;
             default:
@@ -281,21 +281,129 @@ document.addEventListener('click', function(event) {
     }
 });
 
-function openSearchPage() {
-    // Open a new page
-    window.location.href = 'search.html'; // Replace 'search.html' with the URL of your desired page
-}
+// --- EXPANDING SEARCH ICON LOGIC (Copied from movie.js) ---
+document.addEventListener('DOMContentLoaded', () => {
+    const searchIconContainer = document.getElementById('search-icon-container'); // The main div for search icon
+    const expandedSearchInput = document.getElementById('expanded-search-input');
+    const expandedSearchButton = document.getElementById('expanded-search-button');
+
+    // Function to show/hide the expanded search bar
+    const toggleExpandedSearchBar = (show) => {
+        if (show) {
+            searchIconContainer.classList.add('expanded');
+            expandedSearchInput.focus(); // Focus the input when expanded
+        } else {
+            searchIconContainer.classList.remove('expanded');
+            expandedSearchInput.value = ''; // Clear input when collapsed
+        }
+    };
+
+    // Function to handle scroll to show/hide expanded search bar
+    const handleScrollForSearch = () => {
+        const scrollThreshold = 100; // Adjust this value as needed
+        if (window.scrollY > scrollThreshold) {
+            // Keep it open if user clicks, otherwise close it when scrolling back up
+            if (!searchIconContainer.classList.contains('expanded')) {
+                toggleExpandedSearchBar(true);
+            }
+        } else {
+            toggleExpandedSearchBar(false);
+        }
+    };
+
+    // Add scroll event listener
+    window.addEventListener('scroll', handleScrollForSearch);
+
+    // Initial check in case the page loads scrolled down
+    handleScrollForSearch();
+
+    // Event listener for clicking the search icon itself to toggle or redirect
+    if (searchIconContainer) {
+        searchIconContainer.addEventListener('click', (event) => {
+            // Check if the search bar is currently expanded
+            const isExpanded = searchIconContainer.classList.contains('expanded');
+
+            // Check if the click was directly on the icon or its immediate container,
+            // not on the input field or button inside the expanded bar.
+            const clickedOnIconOrContainer = event.target.classList.contains('fas') || event.target.id === 'search-icon-container';
+
+            if (clickedOnIconOrContainer) {
+                if (isExpanded) {
+                    // If the search bar is already expanded (due to scroll or previous click),
+                    // then we just toggle it closed. We don't want to redirect here.
+                    toggleExpandedSearchBar(false); // Close the search bar
+                } else {
+                    // If the search bar is NOT expanded (only icon is visible),
+                    // then redirect to search.html when the icon is clicked.
+                    window.location.href = `search.html`;
+                }
+            }
+            // If the click was inside the expanded input/button, let their specific handlers manage it.
+            // No need to stopPropagation here as the handlers for input/button are specifically added later.
+        });
+    }
+
+    // Event listener for the expanded search button
+    if (expandedSearchButton) {
+        expandedSearchButton.addEventListener('click', () => {
+            const query = expandedSearchInput.value.trim();
+            if (query) {
+                window.location.href = `search.html?query=${encodeURIComponent(query)}`;
+            } else {
+                window.location.href = `search.html`; // Go to search page even if empty
+            }
+        });
+    }
+
+    // Handle pressing Enter key in the search input
+    if (expandedSearchInput) {
+        expandedSearchInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                expandedSearchButton.click(); // Simulate a click on the search button
+            }
+        });
+    }
+
+    // Close the search bar if clicked outside (but not on the search icon container itself)
+    document.addEventListener('click', function(event) {
+        if (searchIconContainer &&
+            !searchIconContainer.contains(event.target) && // If click is not inside the search bar container
+            searchIconContainer.classList.contains('expanded')) { // And if it's currently expanded
+            toggleExpandedSearchBar(false);
+        }
+    });
+
+    // Stop propagation for clicks INSIDE the input/button to prevent them from closing the bar
+    if (expandedSearchInput) {
+        expandedSearchInput.addEventListener('click', (event) => {
+            event.stopPropagation();
+        });
+    }
+    if (expandedSearchButton) {
+        expandedSearchButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+        });
+    }
+});
+// --- END EXPANDING SEARCH ICON LOGIC ---
 
 const SERIES_ENDPOINTS = [
-    { url: 'https://111movies.com/tv/', name: 'Mythic(Fast, Auto Next, Auto Play)' },
-    { url: 'https://player.videasy.net/tv/', name: 'Mythical(Recommended)' },
-    { url: 'https://vidlink.pro/tv/', name: 'Warrior(Auto Play)' },
-    { url: 'https://vidsrc.vip/embed/tv/', name: 'Kupal(Next Button)' },
-    { url: 'https://vidsrc.rip/embed/tv/', name: 'Grand Master' },
-    { url: 'https://api.hexa.watch/tv/', name: 'Epic(No Ads)' },
-    { url: 'https://vidsrc.dev/embed/tv/', name: 'Divine' },
-    { url: 'https://vidsrc.me/embed/tv/', name: 'Sniper' },
-    { url: 'https://vidsrc.cc/v2/embed/tv/', name: 'Legend' },
+    { url: 'https://111movies.com/tv/', name: 'Server 1 (Fast, Auto Next, Auto Play)' },
+    { url: 'https://player.videasy.net/tv/', name: 'Server 2 (Recommended)' },
+    { url: 'https://vidlink.pro/tv/', name: 'Server 3 (Auto Play)' },
+    { url: 'https://vidsrc.vip/embed/tv/', name: 'Server 4 (Next Button)' },
+    { url: 'https://vidsrc.rip/embed/tv/', name: 'Server 5' },
+    { url: 'https://api.hexa.watch/tv/', name: 'Server 6 (No Ads)' },
+    { url: 'https://vidsrc.dev/embed/tv/', name: 'Server 7' },
+    { url: 'https://vidsrc.me/embed/tv/', name: 'Server 8' },
+    { url: 'https://vidsrc.cc/v2/embed/tv/', name: 'Server 9' },
+    { url: 'https://player.vidsrc.co/embed/tv/', name: 'Server 10' },
+    { url: 'https://vidapi.xyz/tv/', name: 'Server 11' },
+    { url: 'https://vidsrc.xyz/embed/tv/', name: 'Server 12' },
+    { url: 'https://vidjoy.pro/embed/tv/', name: 'Server 13' },
+    { url: 'https://www.2embed.cc/embedtvfull/', name: 'Server 14' },
+    { url: 'https://vidsrc.dev/embed/tv/', name: 'Server 15' },
+    { url: 'https://vidlink.pro/tv/', name: 'Server 16' }
 ];
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -337,22 +445,13 @@ const fetchTVShowDetails = async () => {
         if (starContainer) {
             starContainer.innerHTML = '';
             const filledStars = Math.round(tvShowRating / 2);
-            const emptyStars = 5 - filledStars;
-
-            for (let i = 0; i < filledStars; i++) {
+            for (let i = 0; i < 5; i++) {
                 const star = document.createElement('span');
-                star.classList.add('star', 'filled');
-                starContainer.appendChild(star);
-            }
-
-            for (let i = 0; i < emptyStars; i++) {
-                const star = document.createElement('span');
-                star.classList.add('star', 'empty');
+                star.classList.add('star', i < filledStars ? 'filled' : 'empty');
                 starContainer.appendChild(star);
             }
         }
 
-        // Use actual first air date if available, otherwise fallback
         const tvShowFirstAirDate = tvShow.first_air_date ? new Date(tvShow.first_air_date).getFullYear() : "N/A";
         const airDateTextElement = document.getElementById('first-air-date-text');
         if (airDateTextElement) airDateTextElement.textContent = `Year: ${tvShowFirstAirDate}`;
@@ -363,15 +462,10 @@ const fetchTVShowDetails = async () => {
             if (tvShow.genres && tvShow.genres.length > 0) {
                 tvShow.genres.forEach(genre => {
                     const genreElement = document.createElement('span');
-                    genreElement.classList.add('genre-tag'); // Re-using genre-tag class
+                    genreElement.classList.add('genre-tag');
                     genreElement.textContent = genre.name;
                     tvShowGenresInlineContainer.appendChild(genreElement);
                 });
-            } else {
-                const noGenre = document.createElement('span');
-                noGenre.classList.add('genre-tag');
-                noGenre.textContent = 'No Genres';
-                tvShowGenresInlineContainer.appendChild(noGenre);
             }
         }
 
@@ -379,71 +473,50 @@ const fetchTVShowDetails = async () => {
         const creditsUrl = `${baseUrl}/tv/${tvShowId}/credits?api_key=${apiKey}`;
         const creditsResponse = await fetch(creditsUrl);
         const credits = await creditsResponse.json();
-        const castList = document.getElementById('tv-show-cast'); // Changed to tv-show-cast
+        const castList = document.getElementById('tv-show-cast');
         if (castList) {
-            castList.innerHTML = ''; // Clear existing cast
-
-            if (credits.cast && credits.cast.length > 0) {
-                // Display up to 6 cast members
-                credits.cast.slice(0, 6).forEach(member => {
-                    const castMemberDiv = document.createElement('div');
-                    castMemberDiv.classList.add('cast-member');
-
-                    const profilePath = member.profile_path ? `https://image.tmdb.org/t/p/w200${member.profile_path}` : 'https://placehold.co/100x100/CCCCCC/000000?text=No+Image';
-                    const castImg = document.createElement('img');
-                    castImg.src = profilePath;
-                    castImg.alt = member.name;
-                    castImg.onerror = function() { this.src = 'https://placehold.co/100x100/CCCCCC/000000?text=No+Image'; }; // Fallback for broken images
-
-                    const castName = document.createElement('p');
-                    castName.textContent = member.name;
-
-                    castMemberDiv.appendChild(castImg);
-                    castMemberDiv.appendChild(castName);
-                    castList.appendChild(castMemberDiv);
-                });
-            } else {
-                const noCast = document.createElement('p');
-                noCast.textContent = 'No cast information available.';
-                castList.appendChild(noCast);
-            }
+            castList.innerHTML = '';
+            credits.cast.slice(0, 6).forEach(member => {
+                const castMemberDiv = document.createElement('div');
+                castMemberDiv.classList.add('cast-member');
+                castMemberDiv.innerHTML = `
+                    <img src="${member.profile_path ? `https://image.tmdb.org/t/p/w200${member.profile_path}` : 'https://placehold.co/100x100/CCCCCC/000000?text=No+Image'}" alt="${member.name}">
+                    <p>${member.name}</p>
+                `;
+                castList.appendChild(castMemberDiv);
+            });
         }
 
         // Fetch Seasons
         const seasonsContainer = document.getElementById('seasons-list');
         if (seasonsContainer) {
-            seasonsContainer.innerHTML = ''; // Reset seasons container
+            seasonsContainer.innerHTML = '';
             tvShow.seasons.forEach(season => {
+                if(season.season_number === 0) return; // Skip "Specials"
                 const seasonItem = document.createElement('li');
-                const seasonImageUrl = season.poster_path
-                    ? `https://image.tmdb.org/t/p/w200${season.poster_path}`
-                    : 'https://placehold.co/40x40/CCCCCC/000000?text=S'+season.season_number; // Fallback image if no poster
-
-                const seasonImage = document.createElement('img');
-                seasonImage.src = seasonImageUrl;
-                seasonImage.alt = `Season ${season.season_number}`;
-
-                seasonItem.appendChild(seasonImage); // Add the image to the season list item
-                seasonItem.appendChild(document.createTextNode(`Season ${season.season_number}`));
-
-                seasonItem.addEventListener('click', () => {
-                    selectedSeason = season.season_number; // Track the selected season
-                    loadEpisodes(selectedSeason); // Load episodes for that season
-                    toggleDropdown('seasons-list'); // Close season dropdown
-                    document.getElementById('episode-btn').style.display = 'block'; // Show episode button
+                seasonItem.innerHTML = `<img src="${season.poster_path ? `https://image.tmdb.org/t/p/w200${season.poster_path}` : 'https://placehold.co/40x40'}" alt="Season ${season.season_number}"> Season ${season.season_number}`;
+                seasonItem.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectedSeason = season.season_number;
+                    loadEpisodes(selectedSeason);
+                    toggleDropdown('seasons-list', false);
+                    document.getElementById('episode-btn').style.display = 'block';
+                    document.getElementById('season-btn').textContent = `Season ${selectedSeason}`;
                 });
-
                 seasonsContainer.appendChild(seasonItem);
             });
         }
 
         // Fetch Similar TV Shows
-        fetchSimilarTVShows(tvShowId); // Renamed function for clarity
+        fetchSimilarTVShows(tvShowId);
 
-        // Toggle Dropdown visibility
-        const toggleDropdown = (dropdownId) => {
+        // Function to toggle dropdown visibility
+        const toggleDropdown = (dropdownId, shouldShow) => {
             const dropdown = document.getElementById(dropdownId);
-            if (dropdown) dropdown.classList.toggle('show');
+            if(dropdown) {
+                if(shouldShow) dropdown.classList.add('show');
+                else dropdown.classList.remove('show');
+            }
         };
 
         // Load Episodes for the selected season
@@ -451,157 +524,97 @@ const fetchTVShowDetails = async () => {
             const episodesUrl = `${baseUrl}/tv/${tvShowId}/season/${seasonNumber}?api_key=${apiKey}&language=en-US`;
             const episodesResponse = await fetch(episodesUrl);
             const episodesData = await episodesResponse.json();
-
             const episodesContainer = document.getElementById('episodes-list');
             if (episodesContainer) {
-                episodesContainer.innerHTML = ''; // Clear previous episodes
-
+                episodesContainer.innerHTML = '';
                 episodesData.episodes.forEach(episode => {
                     const episodeItem = document.createElement('li');
-                    const episodeImage = document.createElement('img');
-                    const episodeImageUrl = episode.still_path
-                        ? `https://image.tmdb.org/t/p/w200${episode.still_path}`
-                        : 'https://placehold.co/40x40/CCCCCC/000000?text=E'+episode.episode_number; // Fallback image if no still path
-
-                    episodeImage.src = episodeImageUrl;
-                    episodeImage.alt = `Episode ${episode.episode_number}`;
-
-                    episodeItem.appendChild(episodeImage); // Add the image to the episode list item
-                    episodeItem.appendChild(document.createTextNode(`Episode ${episode.episode_number}: ${episode.name}`));
-
-                    episodeItem.addEventListener('click', () => {
+                    episodeItem.innerHTML = `<img src="${episode.still_path ? `https://image.tmdb.org/t/p/w200${episode.still_path}` : 'https://placehold.co/40x40'}" alt="E${episode.episode_number}"> Episode ${episode.episode_number}: ${episode.name}`;
+                    episodeItem.addEventListener('click', (e) => {
+                        e.stopPropagation();
                         selectedEpisode = episode.episode_number;
-                        playEpisode(selectedEpisode, selectedSeason);
-                        toggleDropdown('episodes-list'); // Close episode dropdown after selection
+                        playEpisode();
+                        toggleDropdown('episodes-list', false);
+                        document.getElementById('episode-btn').textContent = `Episode ${selectedEpisode}`;
                     });
-
                     episodesContainer.appendChild(episodeItem);
                 });
             }
         };
 
         // Play selected episode
-        const playEpisode = (episodeNumber, seasonNumber) => {
-            const selectedServerUrl = SERIES_ENDPOINTS[currentServerIndex].url; // Get URL from the selected server
-            console.log(`Trying to load from: ${selectedServerUrl}${tvShowId}/${seasonNumber}/${episodeNumber}?autonext=1&autoplay=1`);
-
+        const playEpisode = () => {
+            if (!selectedSeason || !selectedEpisode) return;
+            const selectedServerUrl = SERIES_ENDPOINTS[currentServerIndex].url;
             const iframeContainer = document.getElementById('iframe-container');
-            const iframe = document.getElementById('tv-show-iframe'); // Assuming tv-show-iframe for TV shows
-
+            const iframe = document.getElementById('tv-show-iframe');
             if (iframeContainer && iframe) {
                 iframeContainer.style.display = 'flex';
-
-                // Construct the correct URL based on selected server logic
-                const serverName = SERIES_ENDPOINTS[currentServerIndex].name;
-                let srcUrl;
-                if (serverName === 'Mythic(Fast, Auto Next, Auto Play)') {
-                    srcUrl = `${selectedServerUrl}${tvShowId}/${seasonNumber}/${episodeNumber}?autonext=1&autoplay=1`;
-                } else if (serverName === 'Warrior(Auto Play)') {
-                    srcUrl = `${selectedServerUrl}${tvShowId}/${seasonNumber}/${episodeNumber}?primaryColor=ffffff&secondaryColor=a2a2a2&iconColor=eefdec&icons=vid&player=default&title=true&poster=true&autoplay=true&nextbutton=true`;
-                } else {
-                    srcUrl = `${selectedServerUrl}${tvShowId}/${seasonNumber}/${episodeNumber}`;
-                }
-
-                iframe.src = srcUrl;
-
-                iframe.onerror = function () {
-                    console.error('Error loading the episode content in the iframe.');
-                    // Use a custom message box instead of alert()
-                    const messageBox = document.createElement('div');
-                    messageBox.style.cssText = `
-                        position: fixed;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        background-color: #333;
-                        color: white;
-                        padding: 20px;
-                        border-radius: 10px;
-                        box-shadow: 0 0 10px rgba(0,0,0,0.5);
-                        z-index: 1200;
-                        text-align: center;
-                    `;
-                    messageBox.innerHTML = `
-                        <p>Failed to load the episode. Try a different server.</p>
-                        <button onclick="this.parentNode.remove()" style="margin-top: 10px; padding: 8px 15px; background-color: #e42f2f; color: white; border: none; border-radius: 5px; cursor: pointer;">OK</button>
-                    `;
-                    document.body.appendChild(messageBox);
-                };
+                iframe.src = `${selectedServerUrl}${tvShowId}/${selectedSeason}/${selectedEpisode}`;
             }
         };
 
-        // Event listeners for the buttons
+        // --- ITO ANG BAGONG LOGIC PARA SA SERVER AT IBA PANG BUTTONS ---
         const seasonBtn = document.getElementById('season-btn');
-        if (seasonBtn) seasonBtn.addEventListener('click', () => toggleDropdown('seasons-list'));
-
         const episodeBtn = document.getElementById('episode-btn');
-        if (episodeBtn) episodeBtn.addEventListener('click', () => toggleDropdown('episodes-list'));
-
-        // Close iframe container (to hide video player)
-        const closeIframeBtn = document.getElementById('close-iframe-btn');
-        if (closeIframeBtn) {
-            closeIframeBtn.addEventListener('click', () => {
-                const iframeContainer = document.getElementById('iframe-container');
-                const iframe = document.getElementById('tv-show-iframe');
-                if (iframeContainer) iframeContainer.style.display = 'none';
-                if (iframe) iframe.src = ''; // Reset iframe source to stop playback
-            });
-        }
-
-        // Change server dropdown logic
         const changeServerBtn = document.getElementById('change-server-btn');
+        const closeIframeBtn = document.getElementById('close-iframe-btn');
+
         const serverDropdown = document.getElementById('server-dropdown');
         const serverList = document.getElementById('server-list');
 
-        if (changeServerBtn && serverDropdown && serverList) {
-            // Toggle dropdown when clicking Change Server
-            changeServerBtn.addEventListener('click', () => {
-                serverDropdown.style.display = serverDropdown.style.display === 'block' ? 'none' : 'block';
+        // Function para palitan ang server
+        const changeServer = (index) => {
+            currentServerIndex = index;
+            // Update active class
+            document.querySelectorAll('#server-list li').forEach(item => item.classList.remove('active'));
+            const activeItem = document.querySelector(`#server-list li[data-index='${index}']`);
+            if (activeItem) activeItem.classList.add('active');
+            
+            // I-reload ang episode gamit ang bagong server kung may pinipili na
+            if (selectedSeason && selectedEpisode) {
+                playEpisode();
+            }
+            // Isara ang dropdown
+            serverDropdown.classList.remove('show');
+        };
 
-                // Clear previous list
-                serverList.innerHTML = '';
-
-                // Add servers to dropdown list with custom names
-                SERIES_ENDPOINTS.forEach((server, index) => {
-                    const serverItem = document.createElement('li');
-                    serverItem.textContent = server.name; // Use custom name here
-                    serverItem.addEventListener('click', () => {
-                        currentServerIndex = index; // Set the selected server index
-                        serverDropdown.style.display = 'none'; // Close dropdown after selecting a server
-
-                        const iframe = document.getElementById('tv-show-iframe');
-                        if (iframe && selectedSeason && selectedEpisode) { // Ensure season and episode are selected before trying to play
-                            // Check if the selected server is 'Mythic' and add the 'autoplay' and 'autonext' parameters
-                            if (server.name === 'Mythic(Fast, Auto Next, Auto Play)') {
-                                iframe.src = `${server.url}${tvShowId}/${selectedSeason}/${selectedEpisode}?autonext=1&autoplay=1`; // Add autoplay and autonext
-                            }
-                            // Check if the selected server is 'Warrior' and add custom parameters
-                            else if (server.name === 'Warrior(Auto Play)') {
-                                iframe.src = `${server.url}${tvShowId}/${selectedSeason}/${selectedEpisode}?primaryColor=ffffff&secondaryColor=a2a2a2&iconColor=eefdec&icons=vid&player=default&title=true&poster=true&autoplay=true&nextbutton=true`; // Add custom Warrior parameters
-                            }
-                            else {
-                                iframe.src = `${server.url}${tvShowId}/${selectedSeason}/${selectedEpisode}`; // Load episode from the selected server without extra params
-                            }
-                        } else if (iframe) {
-                            console.warn("Please select a season and episode before changing the server.");
-                            // Optionally, clear the iframe or show a message if season/episode not selected
-                            iframe.src = '';
-                        }
-                    });
-                    serverList.appendChild(serverItem);
-                });
+        // I-populate ang server list (isang beses lang)
+        serverList.innerHTML = '';
+        SERIES_ENDPOINTS.forEach((server, index) => {
+            const serverItem = document.createElement('li');
+            serverItem.textContent = server.name;
+            serverItem.dataset.index = index;
+            if (index === 0) serverItem.classList.add('active');
+            
+            serverItem.addEventListener('click', (e) => {
+                e.stopPropagation();
+                changeServer(index);
             });
-        }
+            serverList.appendChild(serverItem);
+        });
+
+        // Event listeners para sa mga button
+        if(seasonBtn) seasonBtn.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('server-dropdown')?.classList.remove('show'); document.getElementById('episodes-list')?.classList.remove('show'); document.getElementById('seasons-list')?.classList.toggle('show'); });
+        if(episodeBtn) episodeBtn.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('server-dropdown')?.classList.remove('show'); document.getElementById('seasons-list')?.classList.remove('show'); document.getElementById('episodes-list')?.classList.toggle('show'); });
+        if(changeServerBtn) changeServerBtn.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('seasons-list')?.classList.remove('show'); document.getElementById('episodes-list')?.classList.remove('show'); document.getElementById('server-dropdown')?.classList.toggle('show'); });
+        if(closeIframeBtn) closeIframeBtn.addEventListener('click', () => {
+            const iframeContainer = document.getElementById('iframe-container');
+            const iframe = document.getElementById('tv-show-iframe');
+            if (iframeContainer) iframeContainer.style.display = 'none';
+            if (iframe) iframe.src = '';
+        });
+
+        // Pangsara ng lahat ng dropdown kapag nag-click sa labas
+        window.addEventListener('click', () => {
+            document.getElementById('seasons-list')?.classList.remove('show');
+            document.getElementById('episodes-list')?.classList.remove('show');
+            document.getElementById('server-dropdown')?.classList.remove('show');
+        });
 
     } catch (error) {
         console.error('Error fetching TV show details:', error);
-        // Display error message to user
-        const tvShowTitleElement = document.getElementById('tv-show-title');
-        if (tvShowTitleElement) tvShowTitleElement.textContent = 'Error loading TV show details.';
-        const tvShowDescriptionElement = document.getElementById('tv-show-description');
-        if (tvShowDescriptionElement) tvShowDescriptionElement.textContent = 'Please try again later.';
-        const tvShowPosterElement = document.getElementById('tv-show-poster');
-        if (tvShowPosterElement) tvShowPosterElement.src = 'https://placehold.co/300x450/FF0000/FFFFFF?text=Error';
+        document.body.innerHTML = '<h1>Error loading TV show details.</h1>';
     }
 };
 
@@ -652,13 +665,13 @@ const fetchSimilarTVShows = async (tvShowId) => { // Renamed from fetchMoreLikeT
 
 
 // Fetch data for different TV show categories (keep existing)
-fetchTVShows('popularTV', 'popularTVShows');
-fetchTVShows('trendingTV', 'trendingTVShows');
-fetchTVShows('top_ratedTV', 'topRatedTVShows');
-fetchTVShows('dramaTV', 'dramaTVShows');
-fetchTVShows('comedyTV', 'comedyTVShows');
-fetchTVShows('romanceTV', 'romanceTVShows');
-fetchTVShows('documentaryTV', 'documentaryTVShows');
+fetchTVShows('popular', 'popularTVShows');
+fetchTVShows('trending', 'trendingTVShows');
+fetchTVShows('top_rated', 'topRatedTVShows');
+fetchTVShows('drama', 'dramaTVShows');
+fetchTVShows('comedy', 'comedyTVShows');
+fetchTVShows('romance', 'romanceTVShows');
+fetchTVShows('documentary', 'documentaryTVShows');
 
 // Fetch banner details for TV Shows (keep existing)
 fetchBanner();
