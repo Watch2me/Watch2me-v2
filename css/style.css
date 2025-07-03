@@ -271,7 +271,7 @@ html {
 }
 
 .logo {
-  width: 100px;
+  width: 130px;
   height: auto;
   object-fit: contain;
 }
@@ -913,62 +913,110 @@ h3 {
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
 }
 
+/* Iframe Controls and Server Dropdown Styling */
 .iframe-controls {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: -2px;      /* Nilapitan pa natin sa taas */
+    right: 10px;    /* Nilapitan pa natin sa gilid */
     display: flex;
     gap: 10px;
     z-index: 1100;
-    background: transparent;
-    padding: 0;
-    border-radius: 0;
 }
 
-.iframe-controls button {
-    background-color: #e42f2f;
-    color: white;
+/* Style para sa "Change Server" button */
+#change-server-btn {
+    background-color: #e50914; /* GINAWA NATING PULA */
+    color: white;              /* GINAWA NATING PUTI ANG TEXT */
     padding: 10px 15px;
-    border: none;
+    border: none; /* Tinanggal ang border para mas malinis */
     border-radius: 5px;
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.iframe-controls button:hover {
-    background-color: #b91515;
+#change-server-btn:hover {
+    background-color: #f40612; /* Mas matingkad na pula kapag naka-hover */
 }
 
+/* Style para sa "Close" button */
+#close-iframe-btn {
+    background-color: #333; /* Nanatiling dark gray */
+    color: white;
+    padding: 10px 15px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#close-iframe-btn:hover {
+    background-color: #444;
+}
+
+
+/* Dropdown container */
 .server-dropdown {
     position: absolute;
-    top: 50px;
-    right: 10px;
-    background-color: #333;
+    top: 60px;  /* Inayos ang pwesto sa ilalim ng button */
+    right: 15px;
+    background-color: #181818;
     border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 200px;
-    z-index: 10;
-    display: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    width: 250px;
+    z-index: 1050;
+    display: none; /* ITO ANG DEFAULT: NAKATAGO */
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid rgba(128, 128, 128, 0.2);
 }
 
+/* ITO ANG NAGPAPALABAS SA DROPDOWN */
+.server-dropdown.show {
+    display: block;
+}
+
+/* (Ang natitirang style para sa <ul>, <li>, at scrollbar ay pareho lang sa unang sagot at tama na) */
+/* Kung nabura mo, heto ulit: */
 .server-dropdown ul {
     list-style: none;
-    padding: 0;
+    padding: 5px;
     margin: 0;
 }
 
 .server-dropdown ul li {
-    padding: 10px;
+    padding: 12px 15px;
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.3s ease;
-    color: white;
+    color: #f1f1f1;
+    border-radius: 4px;
+    margin-bottom: 3px;
+    transition: background-color 0.2s ease;
 }
 
-.server-dropdown ul li:hover {
-    background-color: #555;
+.server-dropdown ul li:not(.active):hover {
+    background-color: #2a2a2a;
 }
+
+.server-dropdown ul li.active {
+    background-color: #e50914;
+    color: white;
+    font-weight: bold;
+}
+
+.server-dropdown::-webkit-scrollbar {
+    width: 8px;
+}
+.server-dropdown::-webkit-scrollbar-track {
+    background: #181818;
+}
+.server-dropdown::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 4px;
+    border: 2px solid #181818;
+}
+
 
 /* Responsive adjustments for details pages */
 @media (max-width: 768px) {
@@ -1614,5 +1662,240 @@ h4.top-label {
     .similar-movie-item img,
     .similar-tv-show-item img {
         height: 180px;
+    }
+}
+
+/* Icon Style */
+
+.icon {
+  position: relative; /* Essential for positioning the tooltip text */
+  font-size: 17px;
+  color: white;
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.icon a {
+  text-decoration: none;
+  color: inherit;
+  display: flex; /* Makes the anchor tag a flex container to align icon and text, if needed */
+  flex-direction: column; /* Stacks icon and text vertically */
+  align-items: center; /* Centers items horizontally within the link */
+}
+
+/* Style for the hidden text */
+.icon-text {
+  position: absolute;
+  top: 100%; /* Position below the icon */
+  left: 50%;
+  transform: translateX(-50%); /* Center the text horizontally */
+  background-color: rgba(0, 0, 0, 0.85); /* Dark background for the tooltip */
+  color: white;
+  padding: 5px 8px;
+  border-radius: 4px;
+  white-space: nowrap; /* Prevent text from wrapping */
+  font-size: 0.8em; /* Smaller font size for tooltip */
+  opacity: 0; /* Initially invisible */
+  visibility: hidden; /* Hide from screen readers and pointer events */
+  transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out; /* Smooth transition */
+  z-index: 1000; /* Ensure it's above other elements */
+  margin-top: 5px; /* Small space between icon and text */
+}
+
+/* Show the text on hover */
+.icon:hover .icon-text,
+.icon a:hover .icon-text { /* Target the text inside both div.icon and a.icon */
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Adjust icon container gap if needed to accommodate text */
+.icons-container {
+    gap: 20px; /* You might want to increase this slightly to prevent text overlap */
+}
+
+/* Adjust for smaller screens if the tooltip becomes problematic */
+@media (max-width: 768px) {
+    .icon-text {
+        font-size: 0.7em; /* Even smaller font on mobile */
+        padding: 3px 6px;
+    }
+}
+
+/* Update your existing .icons-container if necessary */
+.icons-container {
+    position: fixed;
+    top: 20px;
+    right: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px; /* Adjust gap to ensure space for expanding bar */
+    z-index: 999;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 10px 15px;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* Specific styles for the expanding search icon */
+.search-icon-with-bar {
+    position: relative; /* Crucial for positioning internal elements */
+    width: 35px; /* Initial width of the icon, adjust to match your fas icon size */
+    height: 35px; /* Initial height of the icon */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Hide the expanding input when it's shrunk */
+    border-radius: 50%; /* Make it circular when collapsed */
+    background-color: rgba(0, 0, 0, 0.4); /* Background for the icon itself */
+    transition: width 0.3s ease, background-color 0.3s ease, border-radius 0.3s ease, padding 0.3s ease;
+    padding: 0; /* Reset padding to control it in expanded state */
+}
+
+.search-icon-with-bar .search-main-icon {
+    font-size: 17px; /* Match your existing icon size */
+    color: white;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+    position: absolute; /* Position it within the container */
+    z-index: 2; /* Ensure it's above the wrapper initially */
+}
+
+.search-icon-with-bar .icon-text {
+    /* Existing icon-text styles. Make sure it positions correctly relative to .search-icon-with-bar */
+    top: 100%; /* Position below the icon */
+    left: 50%;
+    transform: translateX(-50%); /* Center the text horizontally */
+    background-color: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 5px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    font-size: 0.8em;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+    z-index: 1000;
+    margin-top: 5px;
+}
+
+/* Styles for the wrapper holding the input and button */
+.search-input-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0; /* Position to the right edge of its parent (.search-icon-with-bar) */
+    height: 100%;
+    display: flex;
+    align-items: center;
+    opacity: 0; /* Start hidden */
+    visibility: hidden;
+    pointer-events: none; /* Make non-interactive when hidden */
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    width: 0; /* Initial width is 0 */
+    overflow: hidden; /* Hide content that overflows */
+    background-color: transparent; /* No background for the wrapper itself, the parent takes care of it */
+}
+
+.search-input-wrapper input {
+    width: 0; /* Start with zero width */
+    padding: 0; /* No padding when hidden */
+    border: none; /* No border when hidden */
+    background-color: transparent; /* Transparent background when hidden */
+    color: white;
+    font-size: 1em;
+    height: 100%; /* Match parent height */
+    box-sizing: border-box; /* Include padding/border in element's total width and height */
+    transition: width 0.3s ease, padding 0.3s ease, background-color 0.3s ease;
+    outline: none; /* Remove outline on focus */
+}
+
+.search-input-wrapper button {
+    background-color: transparent; /* Make button background transparent initially */
+    color: white;
+    border: none;
+    padding: 0; /* No padding when hidden */
+    cursor: pointer;
+    font-size: 1em;
+    height: 100%;
+    opacity: 0; /* Hide button initially */
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease, background-color 0.3s ease;
+    width: 0; /* Start with zero width */
+}
+
+/* State when the search bar is "shown" (expanded) */
+.search-icon-with-bar.expanded {
+    width: 250px; /* Expanded width, adjust as needed */
+    border-radius: 8px; /* Change to a rectangular shape */
+    background-color: rgba(0, 0, 0, 0.7); /* Background for the expanded bar */
+    padding: 5px 10px; /* Add padding when expanded */
+}
+
+.search-icon-with-bar.expanded .search-main-icon {
+    opacity: 0; /* Hide the main icon */
+    transform: translateX(100%); /* Move it out of the way */
+}
+
+.search-icon-with-bar.expanded .search-input-wrapper {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto; /* Enable interaction */
+    width: 100%; /* Take full width of parent */
+}
+
+.search-icon-with-bar.expanded .search-input-wrapper input {
+    width: calc(100% - 30px); /* Input takes most of the width, leaving space for button */
+    padding: 8px 12px; /* Add padding when visible */
+    background-color: #222; /* Add background to input field */
+    border: 1px solid #444; /* Add border to input field */
+}
+
+.search-icon-with-bar.expanded .search-input-wrapper button {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    width: 30px; /* Width for the search button */
+    padding: 0 5px; /* Adjust padding for the button */
+    background-color: #080808; /* Button background */
+    border-radius: 5px; /* Button border radius */
+    height: auto; /* Allow button height to adjust */
+}
+
+.search-icon-with-bar.expanded .search-input-wrapper button:hover {
+    background-color: #1a1919;
+}
+
+
+/* Responsive adjustments for the expanding search bar */
+@media (max-width: 768px) {
+    .search-icon-with-bar.expanded {
+        width: 180px; /* Smaller expanded width on mobile */
+        padding: 5px;
+    }
+    .search-icon-with-bar.expanded .search-input-wrapper input {
+        width: calc(100% - 25px); /* Adjust input width */
+        font-size: 0.9em;
+        padding: 6px 8px;
+    }
+    .search-icon-with-bar.expanded .search-input-wrapper button {
+        width: 25px;
+        font-size: 0.9em;
+    }
+}
+
+@media (max-width: 480px) {
+    .search-icon-with-bar.expanded {
+        width: 150px; /* Even smaller expanded width */
+    }
+    .search-icon-with-bar.expanded .search-input-wrapper input {
+        width: calc(100% - 20px);
+        padding: 5px 7px;
+    }
+    .search-icon-with-bar.expanded .search-input-wrapper button {
+        width: 20px;
+        font-size: 0.8em;
     }
 }
