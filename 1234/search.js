@@ -114,5 +114,22 @@ searchInput.addEventListener('input', (e) => {
   }
 });
 
-// Load recommended movies/TV shows when the page loads
-fetchRecommendations();
+// Function to initialize the search page based on URL query
+function initializeSearchPage() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryFromUrl = urlParams.get('query'); // Get the 'query' parameter from the URL
+
+    if (queryFromUrl) {
+        // If there's a query in the URL, set the search input value and fetch movies
+        searchInput.value = queryFromUrl;
+        recommendationText.innerHTML = `<p>Searching for "${queryFromUrl}"...</p>`;
+        fetchMovies(queryFromUrl);
+    } else {
+        // If no query in the URL, show recommendations
+        recommendationText.innerHTML = '<p>Recommend Movies and TV Shows</p>';
+        fetchRecommendations();
+    }
+}
+
+// Call the initialization function when the page loads
+document.addEventListener('DOMContentLoaded', initializeSearchPage);
