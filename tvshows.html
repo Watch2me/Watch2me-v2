@@ -17,11 +17,6 @@
 	<link rel="preload" href="css/footer.css" as="style">
     <link rel="preload" href="1234/tvshows.js" as="tvshows">
     <link href="https://db.onlinewebfonts.com/c/25ee966fb81cd61ffdfb393e81c7bf4b?family=Electronica+Display+Outline" rel="stylesheet">
-	<script type="text/javascript" data-cfasync="false">
-/*<![CDATA[/* */
-(function(){var g=window,f="c0713d1b10d7cd23633d058445a43671",d=[["siteId",978+848*804*382-255232417],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],y=["d3d3LmJldHRlcmFkc3lzdGVtLmNvbS9XL29CYWNvbi5taW4uanM=","ZDJrazBvM2ZyN2VkMDEuY2xvdWRmcm9udC5uZXQvZnZxVi94VFJGaC9yYWxhYy5taW4uY3Nz"],v=-1,s,z,l=function(){clearTimeout(z);v++;if(y[v]&&!(1777041288000<(new Date).getTime()&&1<v)){s=g.document.createElement("script");s.type="text/javascript";s.async=!0;var a=g.document.getElementsByTagName("script")[0];s.src="https://"+atob(y[v]);s.crossOrigin="anonymous";s.onerror=l;s.onload=function(){clearTimeout(z);g[f.slice(0,16)+f.slice(0,16)]||l()};z=setTimeout(l,5E3);a.parentNode.insertBefore(s,a)}};if(!g[f]){try{Object.freeze(g[f]=d)}catch(e){}l()}})();
-/*]]>/* */
-</script>
 </head>       
     
 <body>
@@ -49,41 +44,56 @@
     </header>    
 
     <div class="logo-container">
+		<a href="https://watch2me.site">
         <img id="logo" class="logo" src="img/Logo.png" alt="Logo">
+		</a>
       </div> 
       
 <div class="icons-container">
-    <div class="icon" onclick="openSearchPage()">
-        <i class="fas fa-search"></i>
+    <div class="icon search-icon-with-bar" id="search-icon-container">
+        <i class="fas fa-search search-main-icon"></i> <div class="search-input-wrapper">
+            <input type="text" id="expanded-search-input" placeholder="Search..." />
+            <button id="expanded-search-button"><i class="fas fa-search"></i></button>
+        </div>
+        <span class="icon-text">Search</span>
     </div>
-  
     <div class="icon">
         <a href="movies.html">
-            <i class="fas fa-film"></i> </a>
+            <i class="fas fa-film"></i>
+            <span class="icon-text">Movies</span>
+        </a>
     </div>
-  
     <div class="icon">
         <a href="tvshows.html">
-            <i class="fas fa-tv"></i> </a>
-    </div>
-
-      <div class="icon">
-      <a href="sorting.html">
-        <i class="fa fa-sort"></i>
-      </a>
-  </div>
-    
-       <div class="icon">
-    <a href="https://t.me/watch2mechat" target="_blank">
-      <i class="fab fa-telegram-plane"></i> </a>
-   </div>
-
-       <div class="icon">
-        <a href="tvshow-list.html">
-          <i class="fa fa-list-alt"></i>
+            <i class="fas fa-tv"></i>
+            <span class="icon-text">TV Shows</span>
         </a>
-       </div> 
-   </div>
+    </div>
+    <div class="icon">
+        <a href="iptv.html">
+            <i class="fas fa-satellite-dish"></i>
+            <span class="icon-text">Stream your favorite channels LIVE</span>
+        </a>
+    </div>
+    <div class="icon">
+        <a href="sorting.html">
+            <i class="fa fa-sort"></i>
+            <span class="icon-text">Sort</span>
+        </a>
+    </div>
+    <div class="icon">
+        <a href="https://t.me/watch2mechat" target="_blank">
+            <i class="fab fa-telegram-plane"></i>
+            <span class="icon-text">Telegram</span>
+        </a>
+    </div>
+    <div class="icon">
+        <a href="add-to-list.html">
+            <i class="fa fa-list-alt"></i>
+            <span class="icon-text">My List</span>
+        </a>
+    </div>
+</div>
 
     <div class="row">
 	<div style="display: flex; justify-content: space-between; align-items: center; margin-right: 20px;">
